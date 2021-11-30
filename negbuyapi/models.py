@@ -12,7 +12,7 @@ class product_category(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "product_category"
+        verbose_name_plural = "Category"
 
 
 class product_inventory(models.Model):
@@ -25,7 +25,7 @@ class product_inventory(models.Model):
         return "Inventory: " + str(self.id) + " - Capacity: " + str(self.quantity)
 
     class Meta:
-        verbose_name_plural = "product_inventory"
+        verbose_name_plural = "Inventory"
 
 
 class product(models.Model):
@@ -44,7 +44,7 @@ class product(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "product"
+        verbose_name_plural = "Product"
 
 
 class userdb(models.Model):
@@ -75,7 +75,7 @@ class userdb(models.Model):
         return self.username
 
     class Meta:
-        verbose_name_plural = "userdb"
+        verbose_name_plural = "User DB"
 
 
 class order(models.Model):
@@ -84,6 +84,9 @@ class order(models.Model):
 
     def __str__(self):
         return self.user.username + ": " + self.product.name
+
+    class Meta:
+        verbose_name_plural = "Order"
 
 # ------------------------------------------------------------------------------------------------------
 # Old Models

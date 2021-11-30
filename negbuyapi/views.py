@@ -6,20 +6,18 @@ from django.db.models import Count
 from .models import *
 import random
 
-# Create your views here.
-
 
 @api_view(['GET'])
 def login(request):
-    user_id = request.headers['Authorization']
-    phone_no = request.data['phone_no']
-    return Response([user_id, phone_no], status=200)
+    user_id = request.headers['user-id']
+    phone = request.data['phone']
+    return Response([user_id, phone], status=200)
 
 
 @api_view(['GET'])
 def featured_product(request):
     # Get User Id
-    id = request.headers['Authorization']
+    id = request.headers['user-id']
 
     try:
         # Find User's City
