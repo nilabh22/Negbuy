@@ -2,36 +2,48 @@ from django.db import models
 
 # Create your models here.
 
-
-class procure_userdb(models.Model):
+class Procurement_User(models.Model):
 
     user_roles = (
-        ('Merchant', 'Merchant'),
-        ('Buyer', 'Buyer'),
+        ('Merchant','Merchant'),
+        ('Buyer','Buyer'),
     )
 
-    user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50, unique=True)
-    password = models.TextField()
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    role = models.CharField(
-        max_length=50, choices=user_roles, default='Buyer')
-    telephone = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    address_line1 = models.CharField(max_length=50)
-    address_line2 = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    postal_code = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    telephone = models.CharField(max_length=50)
-    mobile = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    organization = models.CharField(max_length=50)
+    user_id = models.CharField(max_length=1000, null=True, blank=True)
+    username = models.CharField(max_length=1000, unique=True)
+    first_name = models.CharField(max_length=1000, null=True, blank=True)
+    last_name = models.CharField(max_length=1000, null=True, blank=True)
+    role = models.CharField(max_length=1000, choices=user_roles, default='Buyer')
+    address_line1 = models.CharField(max_length=1000, null=True, blank=True)
+    address_line2 = models.CharField(max_length=1000, null=True, blank=True)
+    city = models.CharField(max_length=1000, null=True, blank=True)
+    postal_code = models.CharField(max_length=1000, null=True, blank=True)
+    country = models.CharField(max_length=1000, null=True, blank=True)
+    telephone = models.CharField(max_length=1000, null=True, blank=True)
+    mobile = models.CharField(max_length=1000, null=True, blank=True)
+    email = models.CharField(max_length=1000, null=True, blank=True)
+    organization = models.CharField(max_length=1000, null=True, blank=True)
 
-    def __str__(self):
-        return str(self.user_id)
 
-    class Meta:
-        verbose_name_plural = "Procure User DB"
+class Generated_RFQ(models.Model):
+
+    category_choices = (
+        ('Mechanical','Mechanical'),
+        ('Electrical','Electrical'),
+        ('Other','Other'),
+    )
+
+    RFQ_choices = (
+        ('SI','SI'),
+        ('NSI','NSI'),
+    )
+
+    user = models.ForeignKey(Procurement_User, on_delete=models.CASCADE, null=True)
+    Category = models.CharField(max_length=1000, choices=category_choices, default='Mechanical', null=True, blank=True)
+    RFQ_type = models.CharField(max_length=1000, choices=RFQ_choices, default='SI', null=True, blank=True)
+    Item_name = models.CharField(max_length=1000, null=True, blank=True)
+    Quantity = models.CharField(max_length=1000, null=True, blank=True)
+    Model_Information = models.CharField(max_length=1000, null=True, blank=True)
+    Delivery_Time_Duration = models.CharField(max_length=1000, null=True, blank=True)
+    Price_Range = models.CharField(max_length=1000, null=True, blank=True)
+    RFQ_image = models.ImageField(upload_to='RFQ', default=None, blank=True)
