@@ -38,6 +38,11 @@ class Generated_RFQ(models.Model):
         ('NSI','NSI'),
     )
 
+    rfq_status_choices = (
+        ('Pending','Pending'),
+        ('Completed','Completed')
+    )
+
     user = models.ForeignKey(Procurement_User, on_delete=models.CASCADE, null=True)
     Category = models.CharField(max_length=1000, choices=category_choices, default='Mechanical', null=True, blank=True)
     RFQ_type = models.CharField(max_length=1000, choices=RFQ_choices, default='SI', null=True, blank=True)
@@ -47,3 +52,4 @@ class Generated_RFQ(models.Model):
     Delivery_Time_Duration = models.CharField(max_length=1000, null=True, blank=True)
     Price_Range = models.CharField(max_length=1000, null=True, blank=True)
     RFQ_image = models.ImageField(upload_to='RFQ', default=None, blank=True)
+    RFQ_status = models.CharField(max_length=1000, choices=rfq_status_choices, default='Pending', null=True, blank=True)

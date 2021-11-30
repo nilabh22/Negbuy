@@ -56,33 +56,70 @@ def signup(request):
 @api_view(['POST'])
 def RFQ_generation(request):
 
-    user_id = request.headers['User-id']
-    LOGGED_user = Procurement_User.objects.get(user_id=user_id)
-    Item_name = request.data.get('item_name')
-    Category = request.data.get('category')
-    Quantity = request.data.get('quantity')
-    Model_Information = request.data.get('model_information')
-    Delivery_Time_Duration = request.data.get('delivery_time_duration')
-    Price_Range = request.data.get('price_range')
-    RFQ_type = request.data.get('RFQ_type')
-
     try:
-        RFQ_image = request.FILES['RFQ_image']
+        user_id = request.headers['User-id']
+        LOGGED_user = Procurement_User.objects.get(user_id=user_id)
+        Item_name = request.data.get('item_name')
+        Category = request.data.get('category')
+        Quantity = request.data.get('quantity')
+        Model_Information = request.data.get('model_information')
+        Delivery_Time_Duration = request.data.get('delivery_time_duration')
+        Price_Range = request.data.get('price_range')
+        RFQ_type = request.data.get('RFQ_type')
+
+        try:
+            RFQ_image = request.FILES['RFQ_image']
+        except:
+            RFQ_image = None
+
+        if RFQ_type == 'SI':
+            SI_Generated_RFQ = Generated_RFQ.objects.create(
+                user=LOGGED_user,
+                Item_name=Item_name,
+                Category=Category,
+                Quantity=Quantity,
+                Model_Information=Model_Information,
+                Delivery_Time_Duration=Delivery_Time_Duration,
+                Price_Range=Price_Range,
+                RFQ_type=RFQ_type,
+                RFQ_image=RFQ_image
+            )
+            SI_Generated_RFQ.save()
+
+        else:
+            SI_Generated_RFQ = Generated_RFQ.objects.create(
+                user=LOGGED_user,
+                Category=Category,
+                RFQ_type=RFQ_type,
+                RFQ_image=RFQ_image
+            )
+            SI_Generated_RFQ.save()
+
+        return Response('Success', status=200)
     except:
-        RFQ_image = None
+        return Response('Error', status=200)
 
-    if RFQ_type == 'SI':
-        SI_Generated_RFQ = Generated_RFQ.objects.create(
-            user=LOGGED_user,
-            Item_name=Item_name,
-            Category=Category,
-            Quantity=Quantity,
-            Model_Information=Model_Information,
-            Delivery_Time_Duration=Delivery_Time_Duration,
-            Price_Range=Price_Range,
-            RFQ_type=RFQ_type,
-            RFQ_image=RFQ_image
-        )
-        SI_Generated_RFQ.save()
 
-    return Response('Success', status=200)
+@api_view(['POST'])
+def Dashboard_api_function(request):
+    
+    user_id = request.headers['User-id']
+    User_RFQ_data = Generated_RFQ.objects.filter(user=user_id)
+    User_RFQ_list=list()
+    for data in User_RFQ_data:
+        if data.RFQ_type == 'SI':
+            qwe = {
+                'Product_name':data.Item_name,
+                'RFQ_type':data.RFQ_type,
+                'Status':data.RFQ_status,
+                'RFQ_image':data.RFQ_image.url,
+            }
+        else:
+            qwe = {
+                'Product_name':data.RFQ_type,
+                'Status':data.RFQ_status,
+                'RFQ_image':data.RFQ_image.url,
+            }
+        User_RFQ_list.append(qwe)
+    
+    return Response(User_RFQ_list, status=200)
