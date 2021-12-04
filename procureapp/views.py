@@ -6,51 +6,69 @@ from .models import *
 
 @api_view(['GET'])
 def login(request):
-    user_id = int(request.headers['user-id'])
-    data_list = []
+    user_id = request.headers['User-id']
+    phone = request.data['phone']
+    data_list = list()
+
     try:
         usr = Procurement_User.objects.get(user_id=user_id)
         data = {
             'status': False,
+            'phone': usr.phone,
             'first_name': usr.first_name,
             'last_name': usr.last_name,
-            'phone': usr.mobile,
             'language': '',
-            'user_bio': 0
+            'user_bio': 0 if usr.first_name == None else 1,
         }
         data_list.append(data)
-    except Procurement_User.DoesNotExist:  # User does not exists
+
+    except:
+        new_user_data = Procurement_User.objects.create(
+            user_id=user_id, phone=phone)
+        new_user_data.save()
         data = {
-            'status': False,
-            'language': '',
+            'status': True,
+            'phone': phone,
             'first_name': '',
-            'last_name': ''
+            'last_name': '',
         }
         data_list.append(data)
+
     finally:
         return Response(data_list, status=200)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def signup(request):
-    id = int(request.headers['user-id'])
+    user_id = request.headers['User-id']
+    data_list = list()
+
     try:
-        usr = Procurement_User.objects.get(user_id=id)
+        usr = Procurement_User.objects.get(user_id=user_id)
+        usr.first_name = request.data['first_name']
+        usr.last_name = request.data['last_name']
+        usr.organization = request.data['organization']
+        usr.save(update_fields=['first_name', 'last_name', 'organization'])
+
         data = {
             'status': True,
             'user_id': usr.user_id,
             'first_name': usr.first_name,
             'last_name': usr.last_name,
-            'phone': usr.mobile,
+            'phone': usr.phone,
             'organization': usr.organization
         }
+        data_list.append(data)
+
     except:
         data = {
             'status': False,
             'message': 'User Does Not Exists'
         }
+        data_list.append(data)
+
     finally:
-        return Response(data, status=200)
+        return Response(data_list, status=200)
 
 
 @api_view(['POST'])
@@ -102,24 +120,24 @@ def RFQ_generation(request):
 
 @api_view(['POST'])
 def Dashboard_api_function(request):
-    
+
     user_id = request.headers['User-id']
-    User_RFQ_data = Generated_RFQ.objects.filter(user=user_id)
-    User_RFQ_list=list()
+    User_RFQ_data = Generated_RFQ.objects.filter(user__user_id=user_id)
+    User_RFQ_list = list()
     for data in User_RFQ_data:
         if data.RFQ_type == 'SI':
             qwe = {
-                'Product_name':data.Item_name,
-                'RFQ_type':data.RFQ_type,
-                'Status':data.RFQ_status,
-                'RFQ_image':data.RFQ_image.url,
+                'Product_name': data.Item_name,
+                'RFQ_type': data.RFQ_type,
+                'Status': data.RFQ_status,
+                'RFQ_image': data.RFQ_image.url,
             }
         else:
             qwe = {
-                'Product_name':data.RFQ_type,
-                'Status':data.RFQ_status,
-                'RFQ_image':data.RFQ_image.url,
+                'Product_name': data.RFQ_type,
+                'Status': data.RFQ_status,
+                'RFQ_image': data.RFQ_image.url,
             }
         User_RFQ_list.append(qwe)
-    
+
     return Response(User_RFQ_list, status=200)
