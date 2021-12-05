@@ -2,73 +2,73 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import *
+import datetime
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def login(request):
     user_id = request.headers['User-id']
     phone = request.data['phone']
-    data_list = list()
 
     try:
-        usr = Procurement_User.objects.get(user_id=user_id)
-        data = {
+        usr = procurementUser.objects.get(user_id=user_id)
+        response = {
             'status': False,
+            'user_id': user_id,
             'phone': usr.phone,
             'first_name': usr.first_name,
             'last_name': usr.last_name,
             'language': '',
             'user_bio': 0 if usr.first_name == None else 1,
         }
-        data_list.append(data)
 
     except:
-        new_user_data = Procurement_User.objects.create(
+        new_user_data = procurementUser.objects.create(
             user_id=user_id, phone=phone)
         new_user_data.save()
-        data = {
+        response = {
             'status': True,
+            'user_id': user_id,
             'phone': phone,
             'first_name': '',
             'last_name': '',
         }
-        data_list.append(data)
 
     finally:
-        return Response(data_list, status=200)
+        return Response(response, status=200)
 
 
 @api_view(['POST'])
 def signup(request):
     user_id = request.headers['User-id']
-    data_list = list()
 
     try:
-        usr = Procurement_User.objects.get(user_id=user_id)
+        usr = procurementUser.objects.get(user_id=user_id)
         usr.first_name = request.data['first_name']
         usr.last_name = request.data['last_name']
+        usr.email = request.data['email']
         usr.organization = request.data['organization']
-        usr.save(update_fields=['first_name', 'last_name', 'organization'])
+        usr.save(update_fields=['first_name',
+                 'last_name', 'email', 'organization'])
 
-        data = {
+        response = {
             'status': True,
             'user_id': usr.user_id,
             'first_name': usr.first_name,
             'last_name': usr.last_name,
             'phone': usr.phone,
+            'email': usr.email,
             'organization': usr.organization
         }
-        data_list.append(data)
 
     except:
-        data = {
+        response = {
             'status': False,
             'message': 'User Does Not Exists'
         }
-        data_list.append(data)
 
     finally:
-        return Response(data_list, status=200)
+        return Response(response, status=200)
 
 
 @api_view(['POST'])
@@ -76,67 +76,79 @@ def RFQ_generation(request):
 
     try:
         user_id = request.headers['User-id']
-        LOGGED_user = Procurement_User.objects.get(user_id=user_id)
-        Item_name = request.data.get('item_name')
-        Category = request.data.get('category')
-        Quantity = request.data.get('quantity')
-        Model_Information = request.data.get('model_information')
-        Delivery_Time_Duration = request.data.get('delivery_time_duration')
-        Price_Range = request.data.get('price_range')
-        RFQ_type = request.data.get('RFQ_type')
+        user = procurementUser.objects.get(user_id=user_id)
+        item_name = request.data['item_name']
+        category = request.data['category']
+        quantity = request.data['quantity']
+        model_information = request.data['model_information']
+        delivery_time_duration = request.data['delivery_time_duration']
+        price_range = request.data['price_range']
+        rfq_type = request.data['RFQ_type']
 
         try:
-            RFQ_image = request.FILES['RFQ_image']
+            rfq_image = request.FILES['RFQ_image']
         except:
-            RFQ_image = None
+            rfq_image = None
 
-        if RFQ_type == 'SI':
-            SI_Generated_RFQ = Generated_RFQ.objects.create(
-                user=LOGGED_user,
-                Item_name=Item_name,
-                Category=Category,
-                Quantity=Quantity,
-                Model_Information=Model_Information,
-                Delivery_Time_Duration=Delivery_Time_Duration,
-                Price_Range=Price_Range,
-                RFQ_type=RFQ_type,
-                RFQ_image=RFQ_image
+        if rfq_type == 'SI':
+            SI_Generated_RFQ = generatedRFQ.objects.create(
+                user=user,
+                item_name=item_name,
+                category=category,
+                quantity=quantity,
+                model_information=model_information,
+                delivery_time_duration=delivery_time_duration,
+                price_range=price_range,
+                rfq_type=rfq_type,
+                rfq_image=rfq_image,
+                datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
             SI_Generated_RFQ.save()
 
         else:
-            SI_Generated_RFQ = Generated_RFQ.objects.create(
-                user=LOGGED_user,
-                Category=Category,
-                RFQ_type=RFQ_type,
-                RFQ_image=RFQ_image
+            NSI_Generated_RFQ = generatedRFQ.objects.create(
+                user=user,
+                category=category,
+                rfq_type=rfq_type,
+                rfq_image=rfq_image,
+                datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
-            SI_Generated_RFQ.save()
+            NSI_Generated_RFQ.save()
 
-        return Response('Success', status=200)
+        return Response({'status': 'success'}, status=200)
     except:
-        return Response('Error', status=200)
+        return Response({'status': 'error'}, status=200)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def Dashboard_api_function(request):
 
     user_id = request.headers['User-id']
-    User_RFQ_data = Generated_RFQ.objects.filter(user__user_id=user_id)
+    User_RFQ_data = generatedRFQ.objects.filter(user__user_id=user_id)
     User_RFQ_list = list()
+
     for data in User_RFQ_data:
-        if data.RFQ_type == 'SI':
+        try:
+            rfq_image = data.rfq_image.url
+        except:
+            rfq_image = ''
+
+        if data.rfq_type == 'SI':
             qwe = {
-                'Product_name': data.Item_name,
-                'RFQ_type': data.RFQ_type,
-                'Status': data.RFQ_status,
-                'RFQ_image': data.RFQ_image.url,
+                'rfq_type': data.rfq_type,
+                'status': data.rfq_status,
+                'product_name': data.item_name,
+                'rfq_image': rfq_image,
+                'category': data.category,
+                'datetime': data.datetime
             }
         else:
             qwe = {
-                'Product_name': data.RFQ_type,
-                'Status': data.RFQ_status,
-                'RFQ_image': data.RFQ_image.url,
+                'rfq_type': data.rfq_type,
+                'status': data.rfq_status,
+                'rfq_image': rfq_image,
+                'category': data.category,
+                'datetime': data.datetime
             }
         User_RFQ_list.append(qwe)
 
