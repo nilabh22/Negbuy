@@ -6,12 +6,16 @@ import random
 
 
 def makeObject(product):
+    try:
+        imageURL = product.image.url
+    except:
+        imageURL = ''
     object = {
         'name': product.name,
         'description': product.desc,
         'price': product.price,
         'category': product.category_id.name,
-        'image': '',
+        'image': imageURL,
         'rating': {
             'rate': 3.0,
             'count': 430
