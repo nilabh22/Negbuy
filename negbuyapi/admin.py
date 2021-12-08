@@ -10,11 +10,3 @@ admin.site.register(product_category, readFields)
 admin.site.register(product_inventory, readFields)
 admin.site.register(product, readFields)
 admin.site.register(userdb)
-
-
-# class readOnlyId(admin.ModelAdmin):
-#     readonly_fields = ('id',)
-
-# admin.site.register(User_db, readOnlyId)
-# admin.site.register(Merchant_db, readOnlyId)
-# admin.site.register(Product_db, readOnlyId)

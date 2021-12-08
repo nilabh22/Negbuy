@@ -20,6 +20,37 @@ def makeObject(product):
     return object
 
 
+@api_view(['POST'])
+def login(request):
+    user_id = request.headers['User-id']
+    phone = request.data['phone']
+
+    try:
+        usr = userdb.objects.get(user_id=user_id)
+        response = {
+            'status': False,
+            'user_id': user_id,
+            'phone': usr.phone,
+            'first_name': usr.first_name,
+            'last_name': usr.last_name,
+            'language': '',
+            'user_bio': 0 if usr.first_name == None else 1,
+        }
+
+    except:
+        userdb.objects.create(user_id=user_id, phone=phone)
+        response = {
+            'status': True,
+            'user_id': user_id,
+            'phone': phone,
+            'first_name': '',
+            'last_name': '',
+        }
+
+    finally:
+        return Response(response, status=200)
+
+
 @api_view(['GET'])
 def featured_product_api(request):
     featured_product_list = []
@@ -102,70 +133,3 @@ def top_selling_api(request):
     for each_product in random_top_selling_products:
         top_selling_list.append(makeObject(each_product))
     return Response(top_selling_list, status=200)
-
-# -------------------------------------------------------------------------------------------------------
-
-# @api_view(['GET'])
-# def product_list(request):
-#     #in future will be changed according to user
-#     #for now testing version
-#     all_products = Product_db.objects.all()
-#     product_list_ = list()
-#     for each_product in all_products:
-#         each_obj = {
-#             'id':each_product.id,
-#             'title':each_product.title,
-#             'price':each_product.price,
-#             'description':each_product.description,
-#             'category':None,
-#             'image':each_product.image.url,
-#             'rating':{
-#                 'rate':3.0,
-#                 'count':430
-#             }
-#         }
-#         product_list_.append(each_obj)
-#     return Response(product_list_, status=200)
-
-
-# @api_view(['GET'])
-# def mostvalued_fastdispatch(request):
-#     #in future will be changed according to user
-#     #for now testing version
-#     all_products = list(Product_db.objects.all())
-#     Most_valued_product = random.sample(all_products, 4)
-#     most_valued = list()
-#     fast_dispatch = list()
-#     for i in Most_valued_product:
-#         qwe = {
-#             'id':i.id,
-#             'title':i.title,
-#             'price':i.price,
-#             'description':i.description,
-#             'category':None,
-#             'image':i.image.url,
-#             'rating':{
-#                 'rate':3.0,
-#                 'count':430
-#             }
-#         }
-#         most_valued.append(qwe)
-#     for i in all_products:
-#         if len(fast_dispatch) < 4:
-#             if i.fast_dispatch == 'True':
-#                 qwe = {
-#                     'id':i.id,
-#                     'title':i.title,
-#                     'price':i.price,
-#                     'description':i.description,
-#                     'category':None,
-#                     'image':i.image.url,
-#                     'rating':{
-#                         'rate':3.0,
-#                         'count':430
-#                     }
-#                 }
-#                 fast_dispatch.append(qwe)
-#         else:
-#             break
-#     return Response({'Most_valued':most_valued, 'fast_dispatch':fast_dispatch}, status=200)

@@ -7,9 +7,8 @@ from . import views
 
 urlpatterns = [
     #path('', views.homepageView, name="homepage"),
-    # path('api/product_list', views.product_list, name="product_list"),
-    # path('api/mostvalues_fastdispatch', views.mostvalued_fastdispatch, name="mostvalued_fastdispatch"),
 
+    path('api/login', views.login, name="negbuy_login"),
     path('api/featured_product', views.featured_product_api,
          name="featured_product"),
     path('api/fast_dispatch', views.fast_dispatch_api, name="fast_dispatch"),
