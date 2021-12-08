@@ -23,9 +23,10 @@ def login(request):
         }
 
     except:
-        new_user_data = procurementUser.objects.create(
-            user_id=user_id, phone=phone)
-        new_user_data.save()
+        procurementUser.objects.create(
+            user_id=user_id,
+            phone=phone
+        )
         response = {
             'status': True,
             'user_id': user_id,
@@ -77,21 +78,21 @@ def RFQ_generation(request):
     try:
         user_id = request.headers['User-id']
         user = procurementUser.objects.get(user_id=user_id)
-        item_name = request.data['item_name']
-        category = request.data['category']
-        quantity = request.data['quantity']
-        model_information = request.data['model_information']
-        delivery_time_duration = request.data['delivery_time_duration']
-        price_range = request.data['price_range']
         rfq_type = request.data['RFQ_type']
-
+        category = request.data['category']
         try:
             rfq_image = request.FILES['RFQ_image']
         except:
             rfq_image = None
 
         if rfq_type == 'SI':
-            SI_Generated_RFQ = generatedRFQ.objects.create(
+            item_name = request.data['item_name']
+            quantity = request.data['quantity']
+            model_information = request.data['model_information']
+            delivery_time_duration = request.data['delivery_time_duration']
+            price_range = request.data['price_range']
+
+            generatedRFQ.objects.create(
                 user=user,
                 item_name=item_name,
                 category=category,
@@ -103,17 +104,15 @@ def RFQ_generation(request):
                 rfq_image=rfq_image,
                 datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
-            SI_Generated_RFQ.save()
 
         else:
-            NSI_Generated_RFQ = generatedRFQ.objects.create(
+            generatedRFQ.objects.create(
                 user=user,
                 category=category,
                 rfq_type=rfq_type,
                 rfq_image=rfq_image,
                 datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
-            NSI_Generated_RFQ.save()
 
         return Response({'status': 'success'}, status=200)
     except:
@@ -135,6 +134,7 @@ def Dashboard_api_function(request):
 
         if data.rfq_type == 'SI':
             qwe = {
+                'rfq_name': data.category + " " + data.datetime,
                 'rfq_type': data.rfq_type,
                 'status': data.rfq_status,
                 'product_name': data.item_name,
@@ -144,6 +144,7 @@ def Dashboard_api_function(request):
             }
         else:
             qwe = {
+                'rfq_name': data.category + " " + data.datetime,
                 'rfq_type': data.rfq_type,
                 'status': data.rfq_status,
                 'rfq_image': rfq_image,

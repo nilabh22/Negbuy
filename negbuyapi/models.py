@@ -39,6 +39,10 @@ class product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
+    featured_products = models.BooleanField(default=False)
+    fast_dispatch = models.BooleanField(default=False)
+    ready_to_ship = models.BooleanField(default=False)
+    customized_product = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -54,22 +58,22 @@ class userdb(models.Model):
         ('Buyer', 'Buyer'),
     )
 
-    id = models.PositiveIntegerField(primary_key=True)
-    username = models.CharField(max_length=50, unique=True)
-    password = models.TextField()
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    # user_id = models.CharField(max_length=1000, null=True, blank=True)
+    username = models.CharField(max_length=50, unique=True, null=True)
+    password = models.TextField(null=True)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
     role = models.CharField(max_length=50, choices=user_roles, default='Buyer')
-    telephone = models.PositiveIntegerField(unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    address_line1 = models.CharField(max_length=50)
-    address_line2 = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    postal_code = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    telephone = models.CharField(max_length=50)
-    mobile = models.CharField(max_length=50)
+    telephone = models.PositiveIntegerField(unique=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+    address_line1 = models.CharField(max_length=50, null=True)
+    address_line2 = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=50, null=True)
+    postal_code = models.CharField(max_length=50, null=True)
+    country = models.CharField(max_length=50, null=True)
+    telephone = models.CharField(max_length=50, null=True)
+    mobile = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.username
@@ -77,16 +81,6 @@ class userdb(models.Model):
     class Meta:
         verbose_name_plural = "User DB"
 
-
-class order(models.Model):
-    user = models.ForeignKey(userdb, on_delete=models.CASCADE)
-    product = models.ForeignKey(product, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username + ": " + self.product.name
-
-    class Meta:
-        verbose_name_plural = "Order"
 
 # ------------------------------------------------------------------------------------------------------
 # Old Models

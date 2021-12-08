@@ -9,7 +9,6 @@ class readFields(admin.ModelAdmin):
 admin.site.register(product_category, readFields)
 admin.site.register(product_inventory, readFields)
 admin.site.register(product, readFields)
-admin.site.register(order)
 admin.site.register(userdb)
 
 
