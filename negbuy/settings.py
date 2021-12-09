@@ -26,7 +26,7 @@ SECRET_KEY = '53fyu0h8v^12!ck0pwptt&jx3e)c)q^ku7i*q*hz+c0j+6h1i^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.negbuy.com']
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'negbuy.urls'
@@ -76,6 +76,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'negbuy.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
