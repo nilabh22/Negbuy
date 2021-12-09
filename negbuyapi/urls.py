@@ -17,6 +17,8 @@ urlpatterns = [
          name="customized_product"),
     path('api/new_arrivals', views.new_arrivals_api, name="new_arrivals"),
     path('api/top_selling', views.top_selling_api, name="top_selling"),
+    path('api/add_to_cart', views.add_to_cart, name="add_to_cart"),
+    path('api/my_cart', views.my_cart, name="mycart"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

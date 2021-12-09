@@ -11,6 +11,7 @@ def makeObject(product):
     except:
         imageURL = ''
     object = {
+        'id': product.id,
         'name': product.name,
         'description': product.desc,
         'price': product.price,
@@ -30,7 +31,7 @@ def login(request):
     phone = request.data['phone']
 
     try:
-        usr = userdb.objects.get(user_id=user_id)
+        usr = userDB.objects.get(user_id=user_id)
         response = {
             'status': False,
             'user_id': user_id,
@@ -42,7 +43,10 @@ def login(request):
         }
 
     except:
-        userdb.objects.create(user_id=user_id, phone=phone)
+        userDB.objects.create(
+            user_id=user_id,
+            phone=phone
+        )
         response = {
             'status': True,
             'user_id': user_id,
@@ -137,3 +141,57 @@ def top_selling_api(request):
     for each_product in random_top_selling_products:
         top_selling_list.append(makeObject(each_product))
     return Response(top_selling_list, status=200)
+
+
+@api_view(['POST'])
+def add_to_cart(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        product_id = int(request.data['product_id'])
+        quantity = int(request.data['quantity'])
+
+        try:
+            record = cart.objects.get(product_id=product_id)
+            record.quantity = quantity
+            record.save()
+        except:
+            cart.objects.create(
+                user_id=user_id,
+                product_id=product_id,
+                quantity=quantity,
+            )
+        return Response({'status': 'success'}, status=200)
+
+    except:
+        return Response({'status': 'error'}, status=401)
+
+
+@api_view(['GET'])
+def my_cart(request):
+    status = 200
+    cart_items = []
+    user_id = request.headers['User-id']
+
+    try:
+        all_items = cart.objects.filter(user_id=user_id)
+        for each_item in all_items:
+            item_data = {
+                'name': each_item.product.name,
+                'description': each_item.product.desc,
+                'price': each_item.product.price,
+                'category': each_item.product.category_id.name,
+                'image': each_item.product.image.url,
+                'quantity': each_item.quantity,
+                'rating': {
+                    'rate': 3.0,
+                    'count': 430
+                }
+            }
+            cart_items.append(item_data)
+
+    except Exception as e:
+        status = 401
+
+    return Response(cart_items, status=status)

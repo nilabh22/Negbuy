@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class product_category(models.Model):
+class productCategory(models.Model):
     name = models.CharField(max_length=50)
     desc = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,7 @@ class product_category(models.Model):
         verbose_name_plural = "Category"
 
 
-class product_inventory(models.Model):
+class productInventory(models.Model):
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -32,9 +32,9 @@ class product(models.Model):
     name = models.CharField(max_length=50)
     desc = models.TextField()
     sku = models.CharField(max_length=50)
-    category_id = models.ForeignKey(product_category, on_delete=models.CASCADE)
+    category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE)
     inventory_id = models.OneToOneField(
-        product_inventory, on_delete=models.CASCADE)
+        productInventory, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=12, decimal_places=4)
     image = models.ImageField(
         upload_to='Product_images', default=None, blank=True)
@@ -53,7 +53,7 @@ class product(models.Model):
         verbose_name_plural = "Product"
 
 
-class userdb(models.Model):
+class userDB(models.Model):
 
     user_roles = (
         ('Merchant', 'Merchant'),
@@ -83,3 +83,15 @@ class userdb(models.Model):
 
     class Meta:
         verbose_name_plural = "User"
+
+
+class cart(models.Model):
+    user_id = models.CharField(max_length=50)
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.user_id + " --> " + self.product.name + ": " + str(self.quantity)
+
+    class Meta:
+        verbose_name_plural = "Cart"
