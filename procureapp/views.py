@@ -154,3 +154,20 @@ def Dashboard_api_function(request):
         User_RFQ_list.append(qwe)
 
     return Response(User_RFQ_list, status=200)
+
+
+@api_view(['GET'])
+def categories(request):
+
+    categories = [
+        'Agricultural',
+        'Automobile',
+        'Chemical',
+        'Electrical',
+        'Electronics and Communication',
+        'Mechanical',
+    ]
+
+    return Response(categories, status=200)
+
+
