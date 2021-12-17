@@ -26,7 +26,8 @@ SECRET_KEY = '53fyu0h8v^12!ck0pwptt&jx3e)c)q^ku7i*q*hz+c0j+6h1i^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.negbuy.com']
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['api.negbuy.com']
 
 
 # Application definition

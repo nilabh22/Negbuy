@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import *
@@ -49,8 +48,7 @@ def signup(request):
         usr.last_name = request.data['last_name']
         usr.email = request.data['email']
         usr.organization = request.data['organization']
-        usr.save(update_fields=['first_name',
-                 'last_name', 'email', 'organization'])
+        usr.save(update_fields=['first_name', 'last_name', 'email', 'organization'])
 
         response = {
             'status': True,
@@ -124,7 +122,7 @@ def Dashboard_api_function(request):
 
     user_id = request.headers['User-id']
     User_RFQ_data = generatedRFQ.objects.filter(user__user_id=user_id)
-    User_RFQ_list = list()
+    User_RFQ_list = []
 
     for data in User_RFQ_data:
         try:

@@ -33,11 +33,9 @@ class product(models.Model):
     desc = models.TextField()
     sku = models.CharField(max_length=50)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE)
-    inventory_id = models.OneToOneField(
-        productInventory, on_delete=models.CASCADE)
+    inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=12, decimal_places=4)
-    image = models.ImageField(
-        upload_to='Product_images', default=None, blank=True)
+    image = models.ImageField(upload_to='Product_images', default=None, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
@@ -56,13 +54,12 @@ class product(models.Model):
 class userDB(models.Model):
 
     user_roles = (
-        ('Merchant', 'Merchant'),
+        ('Seller', 'Seller'),
         ('Buyer', 'Buyer'),
     )
 
     user_id = models.CharField(max_length=50, null=True, blank=True)
-    username = models.CharField(
-        max_length=50, unique=True, null=True, blank=True)
+    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
     password = models.TextField(null=True, blank=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
@@ -86,12 +83,12 @@ class userDB(models.Model):
 
 
 class cart(models.Model):
-    user_id = models.CharField(max_length=50)
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return self.user_id + " --> " + self.product.name + ": " + str(self.quantity)
+        return self.user.user_id + " --> " + self.product.name + ": " + str(self.quantity)
 
     class Meta:
         verbose_name_plural = "Cart"

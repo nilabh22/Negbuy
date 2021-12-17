@@ -11,8 +11,7 @@ class procurementUser(models.Model):
     user_id = models.CharField(max_length=1000, null=True, blank=True)
     first_name = models.CharField(max_length=1000, null=True, blank=True)
     last_name = models.CharField(max_length=1000, null=True, blank=True)
-    role = models.CharField(
-        max_length=1000, choices=user_roles, default='Buyer')
+    role = models.CharField(max_length=1000, choices=user_roles, default='Buyer')
     country = models.CharField(max_length=1000, null=True, blank=True)
     phone = models.CharField(max_length=1000, null=True, blank=True)
     email = models.CharField(max_length=1000, null=True, blank=True)
@@ -40,22 +39,16 @@ class generatedRFQ(models.Model):
         ('Completed', 'Completed')
     )
 
-    user = models.ForeignKey(
-        procurementUser, on_delete=models.CASCADE, null=True)
-    category = models.CharField(
-        max_length=1000, choices=category_choices, default='Mechanical', null=True, blank=True)
-    rfq_type = models.CharField(
-        max_length=1000, choices=RFQ_choices, default='SI', null=True, blank=True)
+    user = models.ForeignKey(procurementUser, on_delete=models.CASCADE, null=True)
+    category = models.CharField(max_length=1000, choices=category_choices, default='Mechanical', null=True, blank=True)
+    rfq_type = models.CharField(max_length=1000, choices=RFQ_choices, default='SI', null=True, blank=True)
     item_name = models.CharField(max_length=1000, null=True, blank=True)
     quantity = models.CharField(max_length=1000, null=True, blank=True)
-    model_information = models.CharField(
-        max_length=1000, null=True, blank=True)
-    delivery_time_duration = models.CharField(
-        max_length=1000, null=True, blank=True)
+    model_information = models.CharField(max_length=1000, null=True, blank=True)
+    delivery_time_duration = models.CharField(max_length=1000, null=True, blank=True)
     price_range = models.CharField(max_length=1000, null=True, blank=True)
     rfq_image = models.ImageField(upload_to='RFQ', default=None, blank=True)
-    rfq_status = models.CharField(
-        max_length=1000, choices=rfq_status_choices, default='Pending', null=True, blank=True)
+    rfq_status = models.CharField(max_length=1000, choices=rfq_status_choices, default='Pending', null=True, blank=True)
     datetime = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):

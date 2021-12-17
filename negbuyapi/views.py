@@ -1,11 +1,37 @@
-from django.shortcuts import render, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import *
 import random
+import requests
+import bs4
 
 
-def makeObject(product):
+
+def getOldLoginObject(usr):
+    object = {
+        'status': False,
+        'user_id': usr.user_id,
+        'phone': usr.phone,
+        'first_name': usr.first_name,
+        'last_name': usr.last_name,
+        'language': '',
+        'user_bio': 0 if usr.first_name == None else 1,
+    }
+    return object
+
+
+def getNewLoginObject(user_id, phone):
+    object = {
+        'status': True,
+        'user_id': user_id,
+        'phone': phone,
+        'first_name': '',
+        'last_name': '',
+    }
+    return object
+
+
+def getProductObject(product):
     try:
         imageURL = product.image.url
     except:
@@ -25,6 +51,22 @@ def makeObject(product):
     return object
 
 
+def getCartObject(item):
+    object = {
+        'name': item.product.name,
+        'description': item.product.desc,
+        'price': item.product.price,
+        'category': item.product.category_id.name,
+        'image': item.product.image.url,
+        'quantity': item.quantity,
+        'rating': {
+            'rate': 3.0,
+            'count': 430
+        }
+    }
+    return object
+
+
 @api_view(['POST'])
 def login(request):
     user_id = request.headers['User-id']
@@ -32,28 +74,35 @@ def login(request):
 
     try:
         usr = userDB.objects.get(user_id=user_id)
-        response = {
-            'status': False,
-            'user_id': user_id,
-            'phone': usr.phone,
-            'first_name': usr.first_name,
-            'last_name': usr.last_name,
-            'language': '',
-            'user_bio': 0 if usr.first_name == None else 1,
-        }
+        response = getOldLoginObject(usr)
 
     except:
         userDB.objects.create(
             user_id=user_id,
             phone=phone
         )
-        response = {
-            'status': True,
-            'user_id': user_id,
-            'phone': phone,
-            'first_name': '',
-            'last_name': '',
-        }
+        response = getNewLoginObject(user_id, phone)
+
+    finally:
+        return Response(response, status=200)
+
+
+@api_view(['POST'])
+def seller_login(request):
+    user_id = request.headers['User-id']
+    phone = request.data['phone']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        response = getOldLoginObject(usr)
+
+    except:
+        userDB.objects.create(
+            user_id=user_id,
+            phone=phone,
+            role="Seller"  
+        )
+        response = getNewLoginObject(user_id, phone)
 
     finally:
         return Response(response, status=200)
@@ -64,14 +113,14 @@ def featured_product_api(request):
     featured_product_list = []
     featured_products = product.objects.filter(featured_products=True)[:10]
     for each_product in featured_products:
-        featured_product_list.append(makeObject(each_product))
+        featured_product_list.append(getProductObject(each_product))
 
     if len(featured_product_list) != 10:
         products = list(product.objects.filter(featured_products=False))
         random_products = random.sample(
             products, 10-len(featured_product_list))
         for each_product in random_products:
-            featured_product_list.append(makeObject(each_product))
+            featured_product_list.append(getProductObject(each_product))
 
     return Response(featured_product_list, status=200)
 
@@ -81,14 +130,14 @@ def fast_dispatch_api(request):
     fast_dispatch_list = []
     fast_dispatch_products = product.objects.filter(fast_dispatch=True)[:10]
     for each_product in fast_dispatch_products:
-        fast_dispatch_list.append(makeObject(each_product))
+        fast_dispatch_list.append(getProductObject(each_product))
 
     if len(fast_dispatch_list) != 10:
         products = list(product.objects.filter(fast_dispatch=False))
         random_products = random.sample(
             products, 10-len(fast_dispatch_list))
         for each_product in random_products:
-            fast_dispatch_list.append(makeObject(each_product))
+            fast_dispatch_list.append(getProductObject(each_product))
     return Response(fast_dispatch_list, status=200)
 
 
@@ -97,14 +146,14 @@ def ready_to_ship_api(request):
     ready_to_ship_list = []
     ready_to_ship_products = product.objects.filter(ready_to_ship=True)[:10]
     for each_product in ready_to_ship_products:
-        ready_to_ship_list.append(makeObject(each_product))
+        ready_to_ship_list.append(getProductObject(each_product))
 
     if len(ready_to_ship_list) != 10:
         products = list(product.objects.filter(ready_to_ship=False))
         random_products = random.sample(
             products, 10-len(ready_to_ship_list))
         for each_product in random_products:
-            ready_to_ship_list.append(makeObject(each_product))
+            ready_to_ship_list.append(getProductObject(each_product))
     return Response(ready_to_ship_list, status=200)
 
 
@@ -113,14 +162,14 @@ def customized_product_api(request):
     customized_product_list = []
     customized_products = product.objects.filter(customized_product=True)[:10]
     for each_product in customized_products:
-        customized_product_list.append(makeObject(each_product))
+        customized_product_list.append(getProductObject(each_product))
 
     if len(customized_product_list) != 10:
         products = list(product.objects.filter(customized_product=False))
         random_products = random.sample(
             products, 10-len(customized_product_list))
         for each_product in random_products:
-            customized_product_list.append(makeObject(each_product))
+            customized_product_list.append(getProductObject(each_product))
     return Response(customized_product_list, status=200)
 
 
@@ -129,7 +178,7 @@ def new_arrivals_api(request):
     new_arrivals_list = []
     new_arrivals_products = product.objects.all().order_by('-id')[:10]
     for each_product in new_arrivals_products:
-        new_arrivals_list.append(makeObject(each_product))
+        new_arrivals_list.append(getProductObject(each_product))
     return Response(new_arrivals_list, status=200)
 
 
@@ -139,7 +188,7 @@ def top_selling_api(request):
     top_selling_products = list(product.objects.all())
     random_top_selling_products = random.sample(top_selling_products, 10)
     for each_product in random_top_selling_products:
-        top_selling_list.append(makeObject(each_product))
+        top_selling_list.append(getProductObject(each_product))
     return Response(top_selling_list, status=200)
 
 
@@ -153,12 +202,12 @@ def add_to_cart(request):
         quantity = int(request.data['quantity'])
 
         try:
-            record = cart.objects.get(product_id=product_id)
+            record = cart.objects.get(user_id=usr.id, product_id=product_id)
             record.quantity = quantity
             record.save()
         except:
             cart.objects.create(
-                user_id=user_id,
+                user_id=usr.id,
                 product_id=product_id,
                 quantity=quantity,
             )
@@ -177,21 +226,49 @@ def my_cart(request):
     try:
         all_items = cart.objects.filter(user_id=user_id)
         for each_item in all_items:
-            item_data = {
-                'name': each_item.product.name,
-                'description': each_item.product.desc,
-                'price': each_item.product.price,
-                'category': each_item.product.category_id.name,
-                'image': each_item.product.image.url,
-                'quantity': each_item.quantity,
-                'rating': {
-                    'rate': 3.0,
-                    'count': 430
-                }
-            }
-            cart_items.append(item_data)
+            cart_items.append(getCartObject(each_item))
 
     except Exception as e:
         status = 401
 
     return Response(cart_items, status=status)
+
+
+@api_view(['POST'])
+def verify_gst(request):
+    gstNo = request.data['gstNo']
+
+    try:
+        addr = "https://irisgst.com/gstin-filing-detail/?gstinno=" + gstNo
+        response = requests.get(addr)
+        htmlPage = bs4.BeautifulSoup(response.text, "html.parser")
+        divData = htmlPage.find_all('div', {'class':'form-group'})
+        responseData = {
+            'tradeName': divData[0].input.get('value'),
+            'legalName': divData[1].input.get('value'),
+            'type': divData[2].input.get('value'),
+            'regDate': divData[3].input.get('value'),
+            'constBusiness': divData[4].input.get('value'),
+            'businessNature': divData[5].input.get('value'),
+            'principalPlace': divData[6].input.get('value'),
+        }
+        return Response(responseData, status=200)
+
+    except:
+        return Response({'status': 'Invalid GST Number'}, status=403)
+
+
+
+# @api_view(['POST'])
+# def verify_gst(request):
+#     gstNo = request.data['gstNo']
+#     apiKey = "uLYahuOGCgWtHYsF6H2kw7uMe7I2"
+
+#     addr = "https://appyflow.in/api/verifyGST?gstNo=" + gstNo + "&key_secret=" + apiKey
+#     try:
+#         response = requests.get(addr)
+#         data = response.json()
+#         print(data)
+#         return Response(data, status=200)
+#     except:
+#         return Response({'status': 'error'}, status=403)
