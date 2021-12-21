@@ -17,7 +17,7 @@ def getOldLoginObject(usr):
         'language': '',
         'user_bio': 0 if usr.first_name == None else 1,
     }
-    return object
+    return object  
 
 
 def getNewLoginObject(user_id, phone):
@@ -28,6 +28,23 @@ def getNewLoginObject(user_id, phone):
         'first_name': '',
         'last_name': '',
     }
+    return object
+
+
+def getSignUpObject(usr=None, exists=False):
+    if exists:
+        object = {
+            'status': True,
+            'user_id': usr.user_id,
+            'first_name': usr.first_name,
+            'last_name': usr.last_name,
+            'phone': usr.phone,
+        }
+    else:
+        object = {
+            'status': False,
+            'message': 'User Does Not Exists'
+        }
     return object
 
 
@@ -103,6 +120,24 @@ def seller_login(request):
             role="Seller"  
         )
         response = getNewLoginObject(user_id, phone)
+
+    finally:
+        return Response(response, status=200)
+
+
+@api_view(['POST'])
+def signup(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        usr.first_name = request.data['first_name']
+        usr.last_name = request.data['last_name']
+        usr.save(update_fields=['first_name', 'last_name'])
+        response = getSignUpObject(usr, True)
+
+    except:
+        response = getSignUpObject()
 
     finally:
         return Response(response, status=200)
@@ -224,7 +259,8 @@ def my_cart(request):
     user_id = request.headers['User-id']
 
     try:
-        all_items = cart.objects.filter(user_id=user_id)
+        usr = userDB.objects.get(user_id=user_id)
+        all_items = cart.objects.filter(user_id=usr.id)
         for each_item in all_items:
             cart_items.append(getCartObject(each_item))
 
@@ -256,19 +292,3 @@ def verify_gst(request):
 
     except:
         return Response({'status': 'Invalid GST Number'}, status=403)
-
-
-
-# @api_view(['POST'])
-# def verify_gst(request):
-#     gstNo = request.data['gstNo']
-#     apiKey = "uLYahuOGCgWtHYsF6H2kw7uMe7I2"
-
-#     addr = "https://appyflow.in/api/verifyGST?gstNo=" + gstNo + "&key_secret=" + apiKey
-#     try:
-#         response = requests.get(addr)
-#         data = response.json()
-#         print(data)
-#         return Response(data, status=200)
-#     except:
-#         return Response({'status': 'error'}, status=403)
