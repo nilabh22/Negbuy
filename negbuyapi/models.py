@@ -63,17 +63,22 @@ class userDB(models.Model):
     password = models.TextField(null=True, blank=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=50, null=True, blank=True)
     role = models.CharField(max_length=50, choices=user_roles, default='Buyer')
-    telephone = models.PositiveIntegerField(unique=True, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    modified_at = models.DateTimeField(auto_now=True, null=True)
+    date_of_birth = models.CharField(max_length=50, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    company = models.CharField(max_length=50, null=True, blank=True)
+    address = models.CharField(max_length=50, null=True, blank=True)
+    aadhaar = models.ImageField(upload_to='Aadhaar_images', null=True, blank=True)
+    pan = models.ImageField(upload_to='Pan_images', null=True, blank=True)
+    telephone = models.CharField(max_length=50, null=True, blank=True)
     address_line1 = models.CharField(max_length=50, null=True, blank=True)
     address_line2 = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     postal_code = models.CharField(max_length=50, null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)
-    telephone = models.CharField(max_length=50, null=True, blank=True)
-    phone = models.CharField(max_length=50, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.user_id
@@ -92,3 +97,16 @@ class cart(models.Model):
 
     class Meta:
         verbose_name_plural = "Cart"
+
+
+class bankDetail(models.Model):
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    accountName = models.CharField(max_length=50, null=True, blank=True)
+    accountNumber = models.CharField(max_length=50, null=True, blank=True)
+    accountIfsc = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.accountName + ": " + self.accountNumber
+
+    class Meta:
+        verbose_name_plural = "Bank"

@@ -7,80 +7,49 @@ import bs4
 
 
 
-def getOldLoginObject(usr):
-    object = {
-        'status': False,
-        'user_id': usr.user_id,
-        'phone': usr.phone,
-        'first_name': usr.first_name,
-        'last_name': usr.last_name,
-        'language': '',
-        'user_bio': 0 if usr.first_name == None else 1,
-    }
-    return object  
-
-
-def getNewLoginObject(user_id, phone):
-    object = {
-        'status': True,
-        'user_id': user_id,
-        'phone': phone,
-        'first_name': '',
-        'last_name': '',
-    }
-    return object
-
-
-def getSignUpObject(usr=None, exists=False):
-    if exists:
+def getOldLoginObject(usr, isSeller=False):
+    if isSeller:
         object = {
-            'status': True,
+            'status': False,
             'user_id': usr.user_id,
+            'phone': usr.phone,
+            'password': usr.password,
             'first_name': usr.first_name,
             'last_name': usr.last_name,
-            'phone': usr.phone,
+            'language': '',
+            'user_bio': 0 if usr.first_name == None else 1,
         }
     else:
         object = {
             'status': False,
-            'message': 'User Does Not Exists'
+            'user_id': usr.user_id,
+            'phone': usr.phone,
+            'first_name': usr.first_name,
+            'last_name': usr.last_name,
+            'language': '',
+            'user_bio': 0 if usr.first_name == None else 1,
         }
-    return object
+    return object  
 
 
-def getProductObject(product):
-    try:
-        imageURL = product.image.url
-    except:
-        imageURL = ''
-    object = {
-        'id': product.id,
-        'name': product.name,
-        'description': product.desc,
-        'price': product.price,
-        'category': product.category_id.name,
-        'image': imageURL,
-        'rating': {
-            'rate': 3.0,
-            'count': 430
+def getNewLoginObject(user_id, phone, password='', isSeller=False):
+    if isSeller:
+        object = {
+            'status': True,
+            'user_id': user_id,
+            'phone': phone,
+            'password': password,
+            'first_name': '',
+            'last_name': '',
         }
-    }
-    return object
-
-
-def getCartObject(item):
-    object = {
-        'name': item.product.name,
-        'description': item.product.desc,
-        'price': item.product.price,
-        'category': item.product.category_id.name,
-        'image': item.product.image.url,
-        'quantity': item.quantity,
-        'rating': {
-            'rate': 3.0,
-            'count': 430
+    else:
+        object = {
+            'status': True,
+            'user_id': user_id,
+            'phone': phone,
+            'first_name': '',
+            'last_name': '',
         }
-    }
     return object
 
 
@@ -107,40 +76,44 @@ def login(request):
 @api_view(['POST'])
 def seller_login(request):
     user_id = request.headers['User-id']
+    password = request.data['password']
     phone = request.data['phone']
 
     try:
         usr = userDB.objects.get(user_id=user_id)
-        response = getOldLoginObject(usr)
+        response = getOldLoginObject(usr, True)
 
     except:
         userDB.objects.create(
             user_id=user_id,
+            password=password,
             phone=phone,
             role="Seller"  
         )
-        response = getNewLoginObject(user_id, phone)
+        response = getNewLoginObject(user_id, phone, password, True)
 
     finally:
         return Response(response, status=200)
 
 
-@api_view(['POST'])
-def signup(request):
-    user_id = request.headers['User-id']
-
+def getProductObject(product):
     try:
-        usr = userDB.objects.get(user_id=user_id)
-        usr.first_name = request.data['first_name']
-        usr.last_name = request.data['last_name']
-        usr.save(update_fields=['first_name', 'last_name'])
-        response = getSignUpObject(usr, True)
-
+        imageURL = product.image.url
     except:
-        response = getSignUpObject()
-
-    finally:
-        return Response(response, status=200)
+        imageURL = ''
+    object = {
+        'id': product.id,
+        'name': product.name,
+        'description': product.desc,
+        'price': product.price,
+        'category': product.category_id.name,
+        'image': imageURL,
+        'rating': {
+            'rate': 3.0,
+            'count': 430
+        }
+    }
+    return object
 
 
 @api_view(['GET'])
@@ -252,6 +225,22 @@ def add_to_cart(request):
         return Response({'status': 'error'}, status=401)
 
 
+def getCartObject(item):
+    object = {
+        'name': item.product.name,
+        'description': item.product.desc,
+        'price': item.product.price,
+        'category': item.product.category_id.name,
+        'image': item.product.image.url,
+        'quantity': item.quantity,
+        'rating': {
+            'rate': 3.0,
+            'count': 430
+        }
+    }
+    return object
+
+
 @api_view(['GET'])
 def my_cart(request):
     status = 200
@@ -270,6 +259,19 @@ def my_cart(request):
     return Response(cart_items, status=status)
 
 
+def getGstObject(divData):
+    object = {
+        'tradeName': divData[0].input.get('value'),
+        'legalName': divData[1].input.get('value'),
+        'type': divData[2].input.get('value'),
+        'regDate': divData[3].input.get('value'),
+        'constBusiness': divData[4].input.get('value'),
+        'businessNature': divData[5].input.get('value'),
+        'principalPlace': divData[6].input.get('value'),
+    }
+    return object
+
+
 @api_view(['POST'])
 def verify_gst(request):
     gstNo = request.data['gstNo']
@@ -279,16 +281,65 @@ def verify_gst(request):
         response = requests.get(addr)
         htmlPage = bs4.BeautifulSoup(response.text, "html.parser")
         divData = htmlPage.find_all('div', {'class':'form-group'})
-        responseData = {
-            'tradeName': divData[0].input.get('value'),
-            'legalName': divData[1].input.get('value'),
-            'type': divData[2].input.get('value'),
-            'regDate': divData[3].input.get('value'),
-            'constBusiness': divData[4].input.get('value'),
-            'businessNature': divData[5].input.get('value'),
-            'principalPlace': divData[6].input.get('value'),
-        }
-        return Response(responseData, status=200)
+        response = getGstObject(divData)
+        return Response(response, status=200)
 
     except:
         return Response({'status': 'Invalid GST Number'}, status=403)
+
+
+@api_view(['POST'])
+def bank_details(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id, role='Seller')
+        accName = request.data['accName']
+        accNo = request.data['accNo']
+        ifsc = request.data['ifsc']
+
+        bankDetail.objects.create(
+            user_id=usr.id,
+            accountName=accName,
+            accountNumber=accNo,
+            accountIfsc=ifsc
+        )
+        return Response({'status': 'success'}, status=200)
+
+    except:
+        return Response({'status': 'User does not exist'}, status=401)
+
+
+def setSellerDetails(request, usr, aadhaar=None, pan=None):
+    usr.first_name = request.data['first_name']
+    usr.last_name = request.data['last_name']
+    usr.date_of_birth = request.data['date_of_birth']
+    usr.email = request.data['email']
+    usr.company = request.data['company']
+    usr.address = request.data['address']
+    usr.aadhaar = aadhaar
+    usr.pan = pan
+    usr.save(update_fields=['first_name', 'last_name', 'email', 'company', 'address', 'aadhaar', 'pan'])
+
+
+@api_view(['POST'])
+def seller_details(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id, role='Seller')
+        try:
+            aadhaar = request.FILES['aadhaar']
+            pan = request.FILES['pan']
+            setSellerDetails(request, usr, aadhaar=aadhaar, pan=pan)
+        except:
+            try:
+                aadhaar = request.FILES['aadhaar']
+                setSellerDetails(request, usr, aadhaar=aadhaar)
+            except:
+                pan = request.FILES['pan']
+                setSellerDetails(request, usr, pan=pan)
+        return Response({'status': 'success'}, status=200)
+
+    except:
+        return Response({'status': 'User does not exist'}, status=401)
