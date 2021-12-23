@@ -14,9 +14,9 @@ urlpatterns = [
      path('api/top_selling', views.top_selling_api, name="top_selling"),
      path('api/add_to_cart', views.add_to_cart, name="add_to_cart"),
      path('api/my_cart', views.my_cart, name="my_cart"),
-     path('api/seller_details', views.seller_details, name="seller_details"),
      path('api/verify_gst', views.verify_gst, name="verify_gst"),
      path('api/bank_details', views.bank_details, name="bank_details"),
+     path('api/seller_details', views.seller_details, name="seller_details"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -319,7 +319,7 @@ def setSellerDetails(request, usr, aadhaar=None, pan=None):
     usr.address = request.data['address']
     usr.aadhaar = aadhaar
     usr.pan = pan
-    usr.save(update_fields=['first_name', 'last_name', 'email', 'company', 'address', 'aadhaar', 'pan'])
+    usr.save(update_fields=['first_name', 'last_name', 'date_of_birth', 'email', 'company', 'address', 'aadhaar', 'pan'])
 
 
 @api_view(['POST'])
