@@ -310,35 +310,19 @@ def bank_details(request):
         return Response({'status': 'User does not exist'}, status=401)
 
 
-def setSellerDetails(request, usr, aadhaar=None, pan=None):
-    usr.first_name = request.data['first_name']
-    usr.last_name = request.data['last_name']
-    usr.date_of_birth = request.data['date_of_birth']
-    usr.email = request.data['email']
-    usr.company = request.data['company']
-    usr.address = request.data['address']
-    usr.aadhaar = aadhaar
-    usr.pan = pan
-    usr.save(update_fields=['first_name', 'last_name', 'date_of_birth', 'email', 'company', 'address', 'aadhaar', 'pan'])
-
-
 @api_view(['POST'])
 def seller_details(request):
     user_id = request.headers['User-id']
 
     try:
         usr = userDB.objects.get(user_id=user_id, role='Seller')
-        try:
-            aadhaar = request.FILES['aadhaar']
-            pan = request.FILES['pan']
-            setSellerDetails(request, usr, aadhaar=aadhaar, pan=pan)
-        except:
-            try:
-                aadhaar = request.FILES['aadhaar']
-                setSellerDetails(request, usr, aadhaar=aadhaar)
-            except:
-                pan = request.FILES['pan']
-                setSellerDetails(request, usr, pan=pan)
+        usr.seller_name = request.data['seller_name']
+        usr.date_of_birth = request.data['date_of_birth']
+        usr.email = request.data['email']
+        usr.company = request.data['company']
+        usr.address = request.data['address']
+        usr.document_verification = request.FILES['document_verification']
+        usr.save(update_fields=['seller_name', 'date_of_birth', 'email', 'company', 'address', 'document_verification'])
         return Response({'status': 'success'}, status=200)
 
     except:
