@@ -71,6 +71,7 @@ class userDB(models.Model):
     company = models.CharField(max_length=50, null=True, blank=True)
     address = models.CharField(max_length=50, null=True, blank=True)
     document_verification = models.ImageField(upload_to='Documents_images', null=True, blank=True)
+    gst_number = models.CharField(max_length=50, null=True, blank=True)
     telephone = models.CharField(max_length=50, null=True, blank=True)
     address_line1 = models.CharField(max_length=50, null=True, blank=True)
     address_line2 = models.CharField(max_length=50, null=True, blank=True)

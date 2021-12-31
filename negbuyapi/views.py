@@ -14,10 +14,11 @@ def getOldLoginObject(usr, isSeller=False):
             'user_id': usr.user_id,
             'phone': usr.phone,
             'password': usr.password,
-            'first_name': usr.first_name,
-            'last_name': usr.last_name,
+            'seller_name': usr.seller_name,
+            'company': usr.company,
+            'gstNo': usr.gst_number,
             'language': '',
-            'user_bio': 0 if usr.first_name == None else 1,
+            'user_bio': 0 if usr.seller_name == None else 1,
         }
     else:
         object = {
@@ -39,8 +40,7 @@ def getNewLoginObject(user_id, phone, password='', isSeller=False):
             'user_id': user_id,
             'phone': phone,
             'password': password,
-            'first_name': '',
-            'last_name': '',
+            'seller_name':'',
         }
     else:
         object = {
@@ -259,8 +259,9 @@ def my_cart(request):
     return Response(cart_items, status=status)
 
 
-def getGstObject(divData):
+def getGstObject(gst_number, divData):
     object = {
+        'gst_number': gst_number,
         'tradeName': divData[0].input.get('value'),
         'legalName': divData[1].input.get('value'),
         'type': divData[2].input.get('value'),
@@ -274,14 +275,18 @@ def getGstObject(divData):
 
 @api_view(['POST'])
 def verify_gst(request):
-    gstNo = request.data['gstNo']
+    user_id = request.headers['User-id']
+    gst_number = request.data['gstNo']
 
     try:
-        addr = "https://irisgst.com/gstin-filing-detail/?gstinno=" + gstNo
+        usr = userDB.objects.get(user_id=user_id, role='Seller')
+        addr = "https://irisgst.com/gstin-filing-detail/?gstinno=" + gst_number
         response = requests.get(addr)
         htmlPage = bs4.BeautifulSoup(response.text, "html.parser")
         divData = htmlPage.find_all('div', {'class':'form-group'})
-        response = getGstObject(divData)
+        response = getGstObject(gst_number, divData)
+        usr.gst_number = gst_number
+        usr.save(update_fields=['gst_number'])
         return Response(response, status=200)
 
     except:
@@ -325,5 +330,5 @@ def seller_details(request):
         usr.save(update_fields=['seller_name', 'date_of_birth', 'email', 'company', 'address', 'document_verification'])
         return Response({'status': 'success'}, status=200)
 
-    except:
-        return Response({'status': 'User does not exist'}, status=401)
+    except Exception as e:
+        return Response({'status': 'User does not exist', 'error': str(e)}, status=401)
