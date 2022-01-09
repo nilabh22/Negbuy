@@ -225,8 +225,23 @@ def add_to_cart(request):
         return Response({'status': 'error'}, status=401)
 
 
+@api_view(['POST'])
+def remove_from_cart(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        product_id = int(request.data['product_id'])
+        cart.objects.get(user_id=usr.id, product_id=product_id).delete()
+        return Response({'status': 'item removed'})
+
+    except Exception as e:
+        return Response({'status': 'error', 'error': str(e)})
+
+
 def getCartObject(item):
     object = {
+        'id': item.product.id,
         'name': item.product.name,
         'description': item.product.desc,
         'price': item.product.price,
