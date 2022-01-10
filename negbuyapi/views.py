@@ -117,6 +117,10 @@ def getProductInfo(product):
         'created_at': product.created_at,
         'modified_at': product.modified_at,
         'deleted_at': product.deleted_at,
+        'rating': {
+            'rate': 3.0,
+            'count': 430
+        }
     }
     return object
 
