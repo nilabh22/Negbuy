@@ -232,8 +232,18 @@ def remove_from_cart(request):
     try:
         usr = userDB.objects.get(user_id=user_id)
         product_id = int(request.data['product_id'])
-        cart.objects.get(user_id=usr.id, product_id=product_id).delete()
-        return Response({'status': 'item removed'})
+        removed_quantity = int(request.data['removed_quantity'])
+        item_quantity = cart.objects.get(user_id=usr.id, product_id=product_id).quantity
+        new_quantity = item_quantity - removed_quantity
+
+        if new_quantity <= 0:
+            cart.objects.get(user_id=usr.id, product_id=product_id).delete()
+            return Response({'status': 'success', 'msg': 'item removed from cart'})
+        else:
+            record = cart.objects.get(user_id=usr.id, product_id=product_id)
+            record.quantity = new_quantity
+            record.save()
+            return Response({'status': 'success', 'msg': 'item quantity decreased to ' + str(new_quantity)})
 
     except Exception as e:
         return Response({'status': 'error', 'error': str(e)})
