@@ -127,17 +127,13 @@ def getProductInfo(product):
 
 @api_view(['POST'])
 def product_info(request):
-    user_id = request.headers['User-id']
-
     try:
-        usr = userDB.objects.get(user_id=user_id)
-        product_id = int(request.data['product_id'])
+        product_id = request.data['product_id']
         product_info = product.objects.get(id=product_id)
         product_object = getProductInfo(product_info)
         return Response(product_object, status=200)
-
-    except Exception as e:
-        return Response({'status': 'error', 'error_msg': str(e)})
+    except:
+        return Response({'status': 'Product id does not exists'})
 
 
 def getProductObject(product):
