@@ -96,6 +96,46 @@ def seller_login(request):
         return Response(response, status=200)
 
 
+def getProductInfo(product):
+    try:
+        imageURL = product.image.url
+    except:
+        imageURL = ''
+    object = {
+        'id': product.id,
+        'name': product.name,
+        'desc': product.desc,
+        'sku': product.sku,
+        'category': product.category_id.name,
+        'inventory': product.inventory_id.quantity,
+        'price': product.price,
+        'image': imageURL,
+        'featured_products': product.featured_products,
+        'fast_dispatch': product.fast_dispatch,
+        'ready_to_ship': product.ready_to_ship,
+        'customized_product': product.customized_product,
+        'created_at': product.created_at,
+        'modified_at': product.modified_at,
+        'deleted_at': product.deleted_at,
+    }
+    return object
+
+
+@api_view(['POST'])
+def product_info(request):
+    user_id = request.headers['User-id']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        product_id = int(request.data['product_id'])
+        product_info = product.objects.get(id=product_id)
+        product_object = getProductInfo(product_info)
+        return Response(product_object, status=200)
+
+    except Exception as e:
+        return Response({'status': 'error', 'error_msg': str(e)})
+
+
 def getProductObject(product):
     try:
         imageURL = product.image.url
@@ -246,7 +286,7 @@ def remove_from_cart(request):
             return Response({'status': 'success', 'msg': 'item quantity decreased to ' + str(new_quantity)})
 
     except Exception as e:
-        return Response({'status': 'error', 'error': str(e)})
+        return Response({'status': 'error', 'error_msg': str(e)})
 
 
 def getCartObject(item):
@@ -356,4 +396,4 @@ def seller_details(request):
         return Response({'status': 'success'}, status=200)
 
     except Exception as e:
-        return Response({'status': 'User does not exist', 'error': str(e)}, status=401)
+        return Response({'status': 'error', 'error_msg': str(e)}, status=401)
