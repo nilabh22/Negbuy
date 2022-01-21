@@ -403,13 +403,20 @@ def seller_details(request):
 def search_category(request):
     response = []
     raw_string = request.data['category']
-    keywords = raw_string.replace('>', '').replace('& ', '').replace('and ', ''). strip()
+    keywords = raw_string.replace('>', '').replace('& ', '').replace('and ', '').strip()
 
     if len(keywords) == 0:
         return Response(response, status=200)
     else:
         with open('static/categories/categories.txt') as file:
             for line in file:
-                if keywords.lower() in line.lower().replace("& ", ""):
+                if keywords.lower() in line.lower().replace('& ', ''):
                     response.append(line.strip())
+            if len(response) == 0:
+                keywords = keywords.replace(',', '')
+                keywordList = keywords.split(' ')
+                with open('static/categories/categories.txt') as file:
+                    for line in file:
+                        if any(keyword.lower() in line.lower() for keyword in keywordList):
+                            response.append(line.strip())
         return Response(response, status=200)
