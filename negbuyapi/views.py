@@ -403,11 +403,7 @@ def seller_details(request):
 def search_category(request):
     response = []
     raw_string = request.data['category']
-    keywords = raw_string.strip()
-
-    for ch in keywords:
-        if ch == 'and' or ch == '&' or ch == '>':
-            keywords = keywords.replace(ch + " ", "")
+    keywords = raw_string.replace('>', '').replace('& ', '').replace('and ', ''). strip()
 
     if len(keywords) == 0:
         return Response(response, status=200)
