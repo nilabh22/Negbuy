@@ -397,3 +397,23 @@ def seller_details(request):
 
     except Exception as e:
         return Response({'status': 'error', 'error_msg': str(e)}, status=401)
+
+
+@api_view(['POST'])
+def search_category(request):
+    response = []
+    raw_string = request.data['category']
+    keywords = raw_string.strip()
+
+    for ch in keywords:
+        if ch == 'and' or ch == '&' or ch == '>':
+            keywords = keywords.replace(ch + " ", "")
+
+    if len(keywords) == 0:
+        return Response(response, status=200)
+    else:
+        with open('static/categories/categories.txt') as file:
+            for line in file:
+                if keywords.lower() in line.lower().replace("& ", ""):
+                    response.append(line.strip())
+        return Response(response, status=200)
