@@ -180,10 +180,10 @@ def getProductDetails(product):
             'quantity_price': product.quantity_price,
             'maximum_order_quantity': product.maximum_order_quantity,
             'payment_terms': {
-                'Ex Work': product.terms.ex_work,
-                'FOB': product.terms.fob,
-                'CIF': product.terms.cif,
-                'DDP': product.terms.ddp
+                'ex_work': product.terms.ex_work,
+                'fob': product.terms.fob,
+                'cif': product.terms.cif,
+                'ddp': product.terms.ddp
             },
             'weight': product.weight,
             'transportation_port': product.transportation_port,
