@@ -8,6 +8,7 @@ urlpatterns = [
      path('api/seller_login', views.seller_login, name="negbuy_seller_login"),
 
      path('api/product_info', views.product_info, name="product_info"),
+     path('api/product_details', views.product_details, name="product_details"),
      path('api/featured_product', views.featured_product_api, name="featured_product"),
      path('api/fast_dispatch', views.fast_dispatch_api, name="fast_dispatch"),
      path('api/ready_to_ship', views.ready_to_ship_api, name="ready_to_ship"),

@@ -136,6 +136,74 @@ def product_info(request):
         return Response({'status': 'Product id does not exists'})
 
 
+def getProductDetails(product):
+    if product.price_choice == 'Add price':
+        object = {
+            'id': product.id,
+            'name': product.name,
+            'desc': product.desc,
+            'category': product.category_id.name,
+            'keywords': product.keyword,
+            'colors': product.color,
+            'size': product.size,
+            'details': product.details,
+            'price_choice': product.price_choice,
+            'price': product.price,
+            'mrp': product.mrp,
+            'sale_price': product.sale_price,
+            'sale_startdate': product.sale_startdate,
+            'sale_enddate': product.sale_enddate,
+            'manufacturing_time': product.manufacturing_time,
+            'maximum_order_quantity': product.maximum_order_quantity,
+            'payment_terms': {
+                'Ex Work': product.terms.ex_work,
+                'FOB': product.terms.fob,
+                'CIF': product.terms.cif,
+                'DDP': product.terms.ddp
+            },
+            'weight': product.weight,
+            'transportation_port': product.transportation_port,
+            'packing_details': product.packing_details,
+            'packing_address': product.packing_address
+        }
+    else:
+        object = {
+            'id': product.id,
+            'name': product.name,
+            'desc': product.desc,
+            'category': product.category_id.name,
+            'keywords': product.keyword,
+            'colors': product.color,
+            'size': product.size,
+            'details': product.details,
+            'price_choice': product.price_choice,
+            'quantity_price': product.quantity_price,
+            'maximum_order_quantity': product.maximum_order_quantity,
+            'payment_terms': {
+                'Ex Work': product.terms.ex_work,
+                'FOB': product.terms.fob,
+                'CIF': product.terms.cif,
+                'DDP': product.terms.ddp
+            },
+            'weight': product.weight,
+            'transportation_port': product.transportation_port,
+            'packing_details': product.packing_details,
+            'packing_address': product.packing_address
+        }
+    return object
+
+
+@api_view(['POST'])
+def product_details(request):
+    try:
+        product_id = request.data['product_id']
+        product_info = product.objects.get(id=product_id)
+        product_object = getProductDetails(product_info)
+        return Response(product_object, status=200)
+    except:
+        return Response({'status': 'Product id does not exists'})
+
+
 def getProductObject(product):
     try:
         imageURL = product.image.url

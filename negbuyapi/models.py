@@ -28,13 +28,36 @@ class productInventory(models.Model):
         verbose_name_plural = "Inventory"
 
 
+class paymentTermFields(models.Model):
+    ex_work = models.BooleanField(default=False)
+    fob = models.BooleanField(default=False)
+    cif = models.BooleanField(default=False)
+    ddp = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.ex_work) + " " + str(self.fob) + " " + str(self.cif) + " " + str(self.ddp)
+
+    class Meta:
+        verbose_name_plural = "Payment Term Fields"
+
+
 class product(models.Model):
+    product_sizes = [
+        ('Small', 'Small'),
+        ('Medium', 'Medium'),
+        ('Large', 'Large'),
+    ]
+
+    product_price_choices = [
+        ('Add price', 'Add price'),
+        ('Price according to quantity', 'Price according to quantity'),
+    ]
+
     name = models.CharField(max_length=50)
     desc = models.TextField()
     sku = models.CharField(max_length=50)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE)
     inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=12, decimal_places=4)
     image = models.ImageField(upload_to='Product_images', default=None, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -43,6 +66,24 @@ class product(models.Model):
     fast_dispatch = models.BooleanField(default=False)
     ready_to_ship = models.BooleanField(default=False)
     customized_product = models.BooleanField(default=False)
+    keyword = models.CharField(max_length=100, null=True, blank=True)
+    color = models.CharField(max_length=100, null=True, blank=True)
+    size = models.CharField(max_length=100, choices=product_sizes, default='Medium')
+    details = models.CharField(max_length=100, null=True, blank=True)
+    price_choice = models.CharField(max_length=100, choices=product_price_choices, default='Add price')
+    price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
+    mrp = models.IntegerField(null=True, blank=True)
+    sale_price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
+    sale_startdate = models.DateTimeField(null=True, blank=True)
+    sale_enddate = models.DateTimeField(null=True, blank=True)
+    manufacturing_time = models.CharField(max_length=100, null=True, blank=True)
+    quantity_price = models.CharField(max_length=100, null=True, blank=True)
+    maximum_order_quantity = models.IntegerField(null=True, blank=True)
+    terms = models.ForeignKey(paymentTermFields, on_delete=models.CASCADE, null=True)
+    weight = models.CharField(max_length=100, null=True, blank=True)
+    transportation_port = models.CharField(max_length=100, null=True, blank=True)
+    packing_details = models.CharField(max_length=100, null=True, blank=True)
+    packing_address = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -52,7 +93,6 @@ class product(models.Model):
 
 
 class userDB(models.Model):
-
     user_roles = (
         ('Seller', 'Seller'),
         ('Buyer', 'Buyer'),
