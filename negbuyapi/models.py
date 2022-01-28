@@ -46,6 +46,11 @@ class product(models.Model):
         ('Small', 'Small'),
         ('Medium', 'Medium'),
         ('Large', 'Large'),
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
     ]
 
     product_price_choices = [
@@ -56,8 +61,8 @@ class product(models.Model):
     name = models.CharField(max_length=50)
     desc = models.TextField()
     sku = models.CharField(max_length=50)
-    category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE)
-    inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE)
+    category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
+    inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to='Product_images', default=None, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -74,8 +79,8 @@ class product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
     mrp = models.IntegerField(null=True, blank=True)
     sale_price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
-    sale_startdate = models.DateTimeField(null=True, blank=True)
-    sale_enddate = models.DateTimeField(null=True, blank=True)
+    sale_startdate = models.CharField(max_length=100, null=True, blank=True)
+    sale_enddate = models.CharField(max_length=100, null=True, blank=True)
     manufacturing_time = models.CharField(max_length=100, null=True, blank=True)
     quantity_price = models.CharField(max_length=100, null=True, blank=True)
     maximum_order_quantity = models.IntegerField(null=True, blank=True)

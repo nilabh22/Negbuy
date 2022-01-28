@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import datetime
 from .models import *
 import random
 import requests
@@ -136,72 +137,86 @@ def product_info(request):
         return Response({'status': 'Product id does not exists'})
 
 
-def getProductDetails(product):
-    if product.price_choice == 'Add price':
-        object = {
-            'id': product.id,
-            'name': product.name,
-            'desc': product.desc,
-            'category': product.category_id.name,
-            'keywords': product.keyword,
-            'colors': product.color,
-            'size': product.size,
-            'details': product.details,
-            'price_choice': product.price_choice,
-            'price': product.price,
-            'mrp': product.mrp,
-            'sale_price': product.sale_price,
-            'sale_startdate': product.sale_startdate,
-            'sale_enddate': product.sale_enddate,
-            'manufacturing_time': product.manufacturing_time,
-            'maximum_order_quantity': product.maximum_order_quantity,
-            'payment_terms': {
-                'ex_work': product.terms.ex_work,
-                'fob': product.terms.fob,
-                'cif': product.terms.cif,
-                'ddp': product.terms.ddp
-            },
-            'weight': product.weight,
-            'transportation_port': product.transportation_port,
-            'packing_details': product.packing_details,
-            'packing_address': product.packing_address
-        }
-    else:
-        object = {
-            'id': product.id,
-            'name': product.name,
-            'desc': product.desc,
-            'category': product.category_id.name,
-            'keywords': product.keyword,
-            'colors': product.color,
-            'size': product.size,
-            'details': product.details,
-            'price_choice': product.price_choice,
-            'quantity_price': product.quantity_price,
-            'maximum_order_quantity': product.maximum_order_quantity,
-            'payment_terms': {
-                'ex_work': product.terms.ex_work,
-                'fob': product.terms.fob,
-                'cif': product.terms.cif,
-                'ddp': product.terms.ddp
-            },
-            'weight': product.weight,
-            'transportation_port': product.transportation_port,
-            'packing_details': product.packing_details,
-            'packing_address': product.packing_address
-        }
-    return object
+def create_product(request):
+    name = request.data['name']
+    category = request.data['category']
+    try:
+        category_record = productCategory.objects.get(name=category)
+    except:
+        category_record = productCategory.objects.create(name=category)
+    keyword = request.data['keywords']
+    color = request.data['colors']
+    desc = request.data['desc']
+    size = request.data['size']
+    details = request.data['details']
+    price_choice = request.data['price_choice']
+    maximum_order_quantity=request.data['maximum_order_quantity']
+    ex_work = request.data['ex_work']
+    fob = request.data['fob']
+    cif = request.data['cif']
+    ddp = request.data['ddp']
+    try:
+        terms_record = paymentTermFields.objects.get(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
+    except:
+        terms_record = paymentTermFields.objects.create(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
+    weight = request.data['weight']
+    transportation_port = request.data['transportation_port']
+    packing_details = request.data['packing_details']
+    packing_address = request.data['packing_address']
+
+    if price_choice == 'Add price':
+        product.objects.create(
+            name = name,
+            category_id = category_record,
+            keyword = keyword,
+            color = color,
+            desc = desc,
+            size = size,
+            details = details,
+            price_choice = price_choice,
+            price = request.data['price'],
+            mrp =  request.data['mrp'],
+            sale_price = request.data['sale_price'],
+            sale_startdate = request.data['sale_startdate'],
+            sale_enddate = request.data['sale_enddate'],
+            manufacturing_time = request.data['manufacturing_time'],
+            maximum_order_quantity = maximum_order_quantity,
+            terms = terms_record,
+            weight = weight,
+            transportation_port = transportation_port,
+            packing_details = packing_details,
+            packing_address =  packing_address
+        )
+
+    elif price_choice == 'Price according to quantity':
+        product.objects.create(
+            name = name,
+            category_id = category_record,
+            keyword = keyword,
+            color = color,
+            desc = desc,
+            size = size,
+            details = details,
+            price_choice = price_choice,
+            quantity_price = request.data['quantity_price'],
+            maximum_order_quantity = maximum_order_quantity,
+            terms = terms_record,
+            weight = weight,
+            transportation_port = transportation_port,
+            packing_details = packing_details,
+            packing_address =  packing_address
+        )
 
 
 @api_view(['POST'])
-def product_details(request):
+def product_upload_api(request):
+    user_id = request.headers['User-id']
     try:
-        product_id = request.data['product_id']
-        product_info = product.objects.get(id=product_id)
-        product_object = getProductDetails(product_info)
-        return Response(product_object, status=200)
-    except:
-        return Response({'status': 'Product id does not exists'})
+        usr = userDB.objects.get(user_id=user_id)
+        create_product(request)
+        return Response({'success': 'Product Added'}, status=200)
+    except Exception as e:
+        return Response({'status': 'Error', 'error_msg': str(e)})
 
 
 def getProductObject(product):
