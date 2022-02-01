@@ -63,7 +63,6 @@ class product(models.Model):
     sku = models.CharField(max_length=50)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE, null=True)
-    image = models.ImageField(upload_to='Product_images', default=None, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
@@ -95,6 +94,17 @@ class product(models.Model):
 
     class Meta:
         verbose_name_plural = "Product"
+
+
+class productImages(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(upload_to='Product_images', default=None, blank=True)
+
+    def __str__(self):
+        return self.product.name + "--> " +  str(self.image)[15:]
+
+    class Meta:
+        verbose_name_plural = "Product Images"
 
 
 class userDB(models.Model):

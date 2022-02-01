@@ -97,47 +97,7 @@ def seller_login(request):
         return Response(response, status=200)
 
 
-def getProductInfo(product):
-    try:
-        imageURL = product.image.url
-    except:
-        imageURL = ''
-    object = {
-        'id': product.id,
-        'name': product.name,
-        'desc': product.desc,
-        'sku': product.sku,
-        'category': product.category_id.name,
-        'inventory': product.inventory_id.quantity,
-        'price': product.price,
-        'image': imageURL,
-        'featured_products': product.featured_products,
-        'fast_dispatch': product.fast_dispatch,
-        'ready_to_ship': product.ready_to_ship,
-        'customized_product': product.customized_product,
-        'created_at': product.created_at,
-        'modified_at': product.modified_at,
-        'deleted_at': product.deleted_at,
-        'rating': {
-            'rate': 3.0,
-            'count': 430
-        }
-    }
-    return object
-
-
-@api_view(['POST'])
-def product_info(request):
-    try:
-        product_id = request.data['product_id']
-        product_info = product.objects.get(id=product_id)
-        product_object = getProductInfo(product_info)
-        return Response(product_object, status=200)
-    except:
-        return Response({'status': 'Product id does not exists'})
-
-
-def create_product(request):
+def addProduct(request):
     name = request.data['name']
     category = request.data['category']
     try:
@@ -165,7 +125,7 @@ def create_product(request):
     packing_address = request.data['packing_address']
 
     if price_choice == 'Add price':
-        product.objects.create(
+        product_record = product.objects.create(
             name = name,
             category_id = category_record,
             keyword = keyword,
@@ -187,9 +147,15 @@ def create_product(request):
             packing_details = packing_details,
             packing_address =  packing_address
         )
+        try:
+            images = dict((request.data).lists())['image']
+            for image in images:
+                productImages.objects.create(product = product_record, image = image)
+        except:
+            pass
 
     elif price_choice == 'Price according to quantity':
-        product.objects.create(
+        product_record = product.objects.create(
             name = name,
             category_id = category_record,
             keyword = keyword,
@@ -206,6 +172,12 @@ def create_product(request):
             packing_details = packing_details,
             packing_address =  packing_address
         )
+        try:
+            images = dict((request.data).lists())['image']
+            for image in images:
+                productImages.objects.create(product = product_record, image = image)
+        except:
+            pass
 
 
 @api_view(['POST'])
@@ -213,7 +185,7 @@ def product_upload_api(request):
     user_id = request.headers['User-id']
     try:
         usr = userDB.objects.get(user_id=user_id)
-        create_product(request)
+        addProduct(request)
         return Response({'success': 'Product Added'}, status=200)
     except Exception as e:
         return Response({'status': 'Error', 'error_msg': str(e)})
@@ -221,22 +193,66 @@ def product_upload_api(request):
 
 def getProductObject(product):
     try:
-        imageURL = product.image.url
+        prodImages = productImages.objects.filter(product=product)
+        imageURL = []
+        for prodImage in prodImages:
+            imageURL.append(prodImage.image.url)
     except:
-        imageURL = ''
+        imageURL = []
+
     object = {
         'id': product.id,
         'name': product.name,
-        'description': product.desc,
-        'price': product.price,
+        'desc': product.desc,
+        'sku': product.sku,
         'category': product.category_id.name,
+        'inventory': product.inventory_id.quantity,
         'image': imageURL,
+        'featured_products': product.featured_products,
+        'fast_dispatch': product.fast_dispatch,
+        'ready_to_ship': product.ready_to_ship,
+        'customized_product': product.customized_product,
+        'keyword': product.keyword,
+        'color': product.color,
+        'size': product.size,
+        'details': product.details,
+        'price_choice': product.price_choice,
+        'price': product.price,
+        'mrp': product.mrp,
+        'sale_price': product.sale_price,
+        'sale_startdate': product.sale_startdate,
+        'sale_enddate': product.sale_enddate,
+        'manufacturing_time': product.manufacturing_time,
+        'quantity_price': product.quantity_price,
+        'maximum_order_quantity': product.maximum_order_quantity,
+        'ex_work': product.terms.ex_work,
+        'fob': product.terms.fob,
+        'cif': product.terms.cif,
+        'ddp': product.terms.ddp,
+        'weight': product.weight,
+        'transportation_port': product.transportation_port,
+        'packing_details': product.packing_details,
+        'packing_address': product.packing_address,
+        'created_at': product.created_at,
+        'modified_at': product.modified_at,
+        'deleted_at': product.deleted_at,
         'rating': {
             'rate': 3.0,
             'count': 430
         }
     }
     return object
+
+
+@api_view(['POST'])
+def product_info(request):
+    try:
+        product_id = request.data['product_id']
+        product_info = product.objects.get(id=product_id)
+        product_object = getProductObject(product_info)
+        return Response(product_object, status=200)
+    except:
+        return Response({'status': 'Product id does not exists'})
 
 
 @api_view(['GET'])
@@ -344,8 +360,8 @@ def add_to_cart(request):
             )
         return Response({'status': 'success'}, status=200)
 
-    except:
-        return Response({'status': 'error'}, status=401)
+    except Exception as e:
+        return Response({'status': 'error', 'error_msg': str(e)}, status=401)
 
 
 @api_view(['POST'])
@@ -372,36 +388,19 @@ def remove_from_cart(request):
         return Response({'status': 'error', 'error_msg': str(e)})
 
 
-def getCartObject(item):
-    object = {
-        'id': item.product.id,
-        'name': item.product.name,
-        'description': item.product.desc,
-        'price': item.product.price,
-        'category': item.product.category_id.name,
-        'image': item.product.image.url,
-        'quantity': item.quantity,
-        'rating': {
-            'rate': 3.0,
-            'count': 430
-        }
-    }
-    return object
-
-
 @api_view(['GET'])
 def my_cart(request):
     status = 200
     cart_items = []
     user_id = request.headers['User-id']
-
     try:
         usr = userDB.objects.get(user_id=user_id)
         all_items = cart.objects.filter(user_id=usr.id)
         for each_item in all_items:
-            cart_items.append(getCartObject(each_item))
-
-    except Exception as e:
+            object = getProductObject(each_item.product)
+            object['quantity'] = each_item.quantity
+            cart_items.append(object)
+    except:
         status = 401
 
     return Response(cart_items, status=status)
