@@ -42,24 +42,7 @@ class paymentTermFields(models.Model):
 
 
 class product(models.Model):
-    product_sizes = [
-        ('Small', 'Small'),
-        ('Medium', 'Medium'),
-        ('Large', 'Large'),
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
-    ]
-
-    product_price_choices = [
-        ('Add price', 'Add price'),
-        ('Price according to quantity', 'Price according to quantity'),
-    ]
-
     name = models.CharField(max_length=50)
-    desc = models.TextField()
     sku = models.CharField(max_length=50)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE, null=True)
@@ -72,9 +55,9 @@ class product(models.Model):
     customized_product = models.BooleanField(default=False)
     keyword = models.CharField(max_length=100, null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
-    size = models.CharField(max_length=100, choices=product_sizes, default='Medium')
+    size = models.CharField(max_length=100, null=True, blank=True)
     details = models.CharField(max_length=100, null=True, blank=True)
-    price_choice = models.CharField(max_length=100, choices=product_price_choices, default='Add price')
+    price_choice = models.CharField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
     mrp = models.IntegerField(null=True, blank=True)
     sale_price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
@@ -82,7 +65,7 @@ class product(models.Model):
     sale_enddate = models.CharField(max_length=100, null=True, blank=True)
     manufacturing_time = models.CharField(max_length=100, null=True, blank=True)
     quantity_price = models.CharField(max_length=100, null=True, blank=True)
-    maximum_order_quantity = models.IntegerField(null=True, blank=True)
+    maximum_order_quantity = models.CharField(max_length=100, null=True, blank=True)
     terms = models.ForeignKey(paymentTermFields, on_delete=models.CASCADE, null=True)
     weight = models.CharField(max_length=100, null=True, blank=True)
     transportation_port = models.CharField(max_length=100, null=True, blank=True)

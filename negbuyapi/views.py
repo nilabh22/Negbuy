@@ -1,6 +1,5 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from datetime import datetime
 from .models import *
 import random
 import requests
@@ -106,11 +105,9 @@ def addProduct(request):
         category_record = productCategory.objects.create(name=category)
     keyword = request.data['keywords']
     color = request.data['colors']
-    desc = request.data['desc']
     size = request.data['size']
     details = request.data['details']
-    price_choice = request.data['price_choice']
-    maximum_order_quantity=request.data['maximum_order_quantity']
+    price_choice = request.data['price_choice'].lower()
     ex_work = request.data['ex_work']
     fob = request.data['fob']
     cif = request.data['cif']
@@ -124,13 +121,12 @@ def addProduct(request):
     packing_details = request.data['packing_details']
     packing_address = request.data['packing_address']
 
-    if price_choice == 'Add price':
+    if price_choice == 'add price':
         product_record = product.objects.create(
             name = name,
             category_id = category_record,
             keyword = keyword,
             color = color,
-            desc = desc,
             size = size,
             details = details,
             price_choice = price_choice,
@@ -140,7 +136,7 @@ def addProduct(request):
             sale_startdate = request.data['sale_startdate'],
             sale_enddate = request.data['sale_enddate'],
             manufacturing_time = request.data['manufacturing_time'],
-            maximum_order_quantity = maximum_order_quantity,
+            maximum_order_quantity = request.data['maximum_order_quantity'],
             terms = terms_record,
             weight = weight,
             transportation_port = transportation_port,
@@ -154,18 +150,16 @@ def addProduct(request):
         except:
             pass
 
-    elif price_choice == 'Price according to quantity':
+    elif price_choice == 'price according to quantity':
         product_record = product.objects.create(
             name = name,
             category_id = category_record,
             keyword = keyword,
             color = color,
-            desc = desc,
             size = size,
             details = details,
             price_choice = price_choice,
             quantity_price = request.data['quantity_price'],
-            maximum_order_quantity = maximum_order_quantity,
             terms = terms_record,
             weight = weight,
             transportation_port = transportation_port,
@@ -174,6 +168,7 @@ def addProduct(request):
         )
         try:
             images = dict((request.data).lists())['image']
+            print(images)
             for image in images:
                 productImages.objects.create(product = product_record, image = image)
         except:
@@ -203,7 +198,6 @@ def getProductObject(product):
     object = {
         'id': product.id,
         'name': product.name,
-        'desc': product.desc,
         'sku': product.sku,
         'category': product.category_id.name,
         'inventory': product.inventory_id.quantity,
