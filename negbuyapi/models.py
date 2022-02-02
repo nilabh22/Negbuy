@@ -1,6 +1,43 @@
 from django.db import models
 
 
+
+class userDB(models.Model):
+    user_roles = (
+        ('Seller', 'Seller'),
+        ('Buyer', 'Buyer'),
+    )
+
+    user_id = models.CharField(max_length=50, null=True, blank=True)
+    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    password = models.TextField(null=True, blank=True)
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=50, null=True, blank=True)
+    role = models.CharField(max_length=50, choices=user_roles, default='Buyer')
+    seller_name = models.CharField(max_length=50, null=True, blank=True)
+    date_of_birth = models.CharField(max_length=50, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    company = models.CharField(max_length=50, null=True, blank=True)
+    address = models.CharField(max_length=50, null=True, blank=True)
+    document_verification = models.ImageField(upload_to='Documents_images', null=True, blank=True)
+    gst_number = models.CharField(max_length=50, null=True, blank=True)
+    telephone = models.CharField(max_length=50, null=True, blank=True)
+    address_line1 = models.CharField(max_length=50, null=True, blank=True)
+    address_line2 = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    postal_code = models.CharField(max_length=50, null=True, blank=True)
+    country = models.CharField(max_length=50, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.user_id
+
+    class Meta:
+        verbose_name_plural = "User"
+
+
 class productCategory(models.Model):
     name = models.CharField(max_length=50)
     desc = models.TextField()
@@ -42,6 +79,7 @@ class paymentTermFields(models.Model):
 
 
 class product(models.Model):
+    user = models.ForeignKey(userDB, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50)
     sku = models.CharField(max_length=50)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
@@ -88,42 +126,6 @@ class productImages(models.Model):
 
     class Meta:
         verbose_name_plural = "Product Images"
-
-
-class userDB(models.Model):
-    user_roles = (
-        ('Seller', 'Seller'),
-        ('Buyer', 'Buyer'),
-    )
-
-    user_id = models.CharField(max_length=50, null=True, blank=True)
-    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
-    password = models.TextField(null=True, blank=True)
-    first_name = models.CharField(max_length=50, null=True, blank=True)
-    last_name = models.CharField(max_length=50, null=True, blank=True)
-    phone = models.CharField(max_length=50, null=True, blank=True)
-    role = models.CharField(max_length=50, choices=user_roles, default='Buyer')
-    seller_name = models.CharField(max_length=50, null=True, blank=True)
-    date_of_birth = models.CharField(max_length=50, null=True, blank=True)
-    email = models.CharField(max_length=50, null=True, blank=True)
-    company = models.CharField(max_length=50, null=True, blank=True)
-    address = models.CharField(max_length=50, null=True, blank=True)
-    document_verification = models.ImageField(upload_to='Documents_images', null=True, blank=True)
-    gst_number = models.CharField(max_length=50, null=True, blank=True)
-    telephone = models.CharField(max_length=50, null=True, blank=True)
-    address_line1 = models.CharField(max_length=50, null=True, blank=True)
-    address_line2 = models.CharField(max_length=50, null=True, blank=True)
-    city = models.CharField(max_length=50, null=True, blank=True)
-    postal_code = models.CharField(max_length=50, null=True, blank=True)
-    country = models.CharField(max_length=50, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    modified_at = models.DateTimeField(auto_now=True, null=True)
-
-    def __str__(self):
-        return self.user_id
-
-    class Meta:
-        verbose_name_plural = "User"
 
 
 class cart(models.Model):

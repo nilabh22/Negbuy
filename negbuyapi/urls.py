@@ -15,6 +15,7 @@ urlpatterns = [
      path('api/customized_product', views.customized_product_api, name="customized_product"),
      path('api/new_arrivals', views.new_arrivals_api, name="new_arrivals"),
      path('api/top_selling', views.top_selling_api, name="top_selling"),
+     path('api/user_products', views.user_products_api, name="user_products"),
 
      path('api/add_to_cart', views.add_to_cart, name="add_to_cart"),
      path('api/remove_from_cart', views.remove_from_cart, name="remove_from_cart"),

@@ -96,7 +96,7 @@ def seller_login(request):
         return Response(response, status=200)
 
 
-def addProduct(request):
+def addProduct(request, user):
     name = request.data['name']
     category = request.data['category']
     try:
@@ -123,6 +123,7 @@ def addProduct(request):
 
     if price_choice == 'add price':
         product_record = product.objects.create(
+            user = user,
             name = name,
             category_id = category_record,
             keyword = keyword,
@@ -152,11 +153,12 @@ def addProduct(request):
 
     elif price_choice == 'price according to quantity':
         product_record = product.objects.create(
+            user = user,
             name = name,
             category_id = category_record,
             keyword = keyword,
             color = color,
-            size = size,
+            size = size, 
             details = details,
             price_choice = price_choice,
             quantity_price = request.data['quantity_price'],
@@ -168,7 +170,6 @@ def addProduct(request):
         )
         try:
             images = dict((request.data).lists())['image']
-            print(images)
             for image in images:
                 productImages.objects.create(product = product_record, image = image)
         except:
@@ -179,8 +180,8 @@ def addProduct(request):
 def product_upload_api(request):
     user_id = request.headers['User-id']
     try:
-        usr = userDB.objects.get(user_id=user_id)
-        addProduct(request)
+        user = userDB.objects.get(user_id=user_id, role='Seller')
+        addProduct(request, user)
         return Response({'success': 'Product Added'}, status=200)
     except Exception as e:
         return Response({'status': 'Error', 'error_msg': str(e)})
@@ -398,6 +399,21 @@ def my_cart(request):
         status = 401
 
     return Response(cart_items, status=status)
+
+
+@api_view(['GET'])
+def user_products_api(request):
+    user_id = request.headers['User-id']
+    user_products = []
+    try:
+        user = userDB.objects.get(user_id=user_id, role='Seller')
+        user_products = product.objects.filter(user=user)
+        for each_product in user_products:
+            user_products.append(getProductObject(each_product))
+    except Exception as e:
+        return Response({'status': 'error', 'error_msg': str(e)}, status=401)
+
+    return Response(user_products, status=200)
 
 
 def getGstObject(gst_number, divData):
