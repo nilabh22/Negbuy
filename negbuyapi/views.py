@@ -189,6 +189,11 @@ def product_upload_api(request):
 
 def getProductObject(product):
     try:
+        inventory = product.inventory_id.quantity
+    except:
+        inventory = ''
+
+    try:
         prodImages = productImages.objects.filter(product=product)
         imageURL = []
         for prodImage in prodImages:
@@ -201,7 +206,7 @@ def getProductObject(product):
         'name': product.name,
         'sku': product.sku,
         'category': product.category_id.name,
-        'inventory': product.inventory_id.quantity,
+        'inventory': inventory,
         'image': imageURL,
         'featured_products': product.featured_products,
         'fast_dispatch': product.fast_dispatch,
@@ -246,8 +251,8 @@ def product_info(request):
         product_info = product.objects.get(id=product_id)
         product_object = getProductObject(product_info)
         return Response(product_object, status=200)
-    except:
-        return Response({'status': 'Product id does not exists'})
+    except Exception as e:
+        return Response({'status': 'Product id does not exists', 'error_msg': str(e)})
 
 
 @api_view(['GET'])
@@ -404,16 +409,16 @@ def my_cart(request):
 @api_view(['GET'])
 def user_products_api(request):
     user_id = request.headers['User-id']
-    user_products = []
+    response = []
     try:
         user = userDB.objects.get(user_id=user_id, role='Seller')
         user_products = product.objects.filter(user=user)
         for each_product in user_products:
-            user_products.append(getProductObject(each_product))
+            response.append(getProductObject(each_product))
     except Exception as e:
         return Response({'status': 'error', 'error_msg': str(e)}, status=401)
 
-    return Response(user_products, status=200)
+    return Response(response, status=200)
 
 
 def getGstObject(gst_number, divData):
@@ -512,3 +517,18 @@ def search_category(request):
                         if any(keyword.lower() in line.lower() for keyword in keywordList):
                             response.append(line.strip())
         return Response(response, status=200)
+
+
+def getPort(port):
+    name = port.name
+    state = port.state
+    return name + ',' + state
+
+
+@api_view(['GET'])
+def get_ports(request):
+    response = []
+    all_ports = port.objects.all()
+    for each_port in all_ports:
+        response.append(getPort(each_port))
+    return Response(response, status=200)

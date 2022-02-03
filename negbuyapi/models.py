@@ -53,7 +53,7 @@ class productCategory(models.Model):
 
 
 class productInventory(models.Model):
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
@@ -75,7 +75,7 @@ class paymentTermFields(models.Model):
         return str(self.ex_work) + " " + str(self.fob) + " " + str(self.cif) + " " + str(self.ddp)
 
     class Meta:
-        verbose_name_plural = "Payment Term Fields"
+        verbose_name_plural = "Payment Term Field"
 
 
 class product(models.Model):
@@ -125,7 +125,7 @@ class productImages(models.Model):
         return self.product.name + "--> " +  str(self.image)[15:]
 
     class Meta:
-        verbose_name_plural = "Product Images"
+        verbose_name_plural = "Product Image"
 
 
 class cart(models.Model):
@@ -151,3 +151,14 @@ class bankDetail(models.Model):
 
     class Meta:
         verbose_name_plural = "Bank"
+
+
+class port(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name + ', ' + self.state
+
+    class Meta:
+        verbose_name_plural = "Port"

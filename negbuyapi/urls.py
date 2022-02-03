@@ -25,7 +25,8 @@ urlpatterns = [
      path('api/bank_details', views.bank_details, name="bank_details"),
      path('api/seller_details', views.seller_details, name="seller_details"),
 
-     path('api/search_category', views.search_category, name="search_category")
+     path('api/search_category', views.search_category, name="search_category"),
+     path('api/get_ports', views.get_ports, name="get_ports")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
