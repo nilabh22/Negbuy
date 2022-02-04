@@ -81,7 +81,7 @@ class paymentTermFields(models.Model):
 class product(models.Model):
     user = models.ForeignKey(userDB, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50)
-    sku = models.CharField(max_length=50)
+    sku = models.CharField(max_length=50, null=True, blank=True)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

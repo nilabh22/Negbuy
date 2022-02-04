@@ -1,10 +1,38 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from drf_api_logger import API_LOGGER_SIGNAL
 from .models import *
 import random
 import requests
 import bs4
+import datetime
 
+
+
+def requestLogger(request):
+    log_response = '{request=' + str(dict(request.data)) + ' '
+    logFile = open('static/log/negbuyapi_access.log', 'a')
+    logFile.write(log_response)
+    logFile.close()
+
+
+def reponseLogger(**kwargs):
+    client_ip = kwargs['client_ip_address']
+    dt = str(datetime.datetime.now())
+    method = kwargs['method']
+    api = kwargs['api']
+    status = str(kwargs['status_code'])
+    execution_time = str(kwargs['execution_time'])
+    response = str(kwargs['response'])
+    log_response = client_ip + ' [' + dt + '] ' + method + " " + api + " " + status + " " + execution_time + " response=" + response + "}"
+    logFile = open('static/log/negbuyapi_access.log', 'a')
+    logFile.write(log_response + '\n')
+    logFile.close()
+
+
+def apiLogger(request):
+    requestLogger(request)
+    API_LOGGER_SIGNAL.listen = reponseLogger
 
 
 def getOldLoginObject(usr, isSeller=False):
@@ -182,6 +210,7 @@ def product_upload_api(request):
     try:
         user = userDB.objects.get(user_id=user_id, role='Seller')
         addProduct(request, user)
+        apiLogger(request)
         return Response({'success': 'Product Added'}, status=200)
     except Exception as e:
         return Response({'status': 'Error', 'error_msg': str(e)})
@@ -250,6 +279,7 @@ def product_info(request):
         product_id = request.data['product_id']
         product_info = product.objects.get(id=product_id)
         product_object = getProductObject(product_info)
+        apiLogger(request)
         return Response(product_object, status=200)
     except Exception as e:
         return Response({'status': 'Product id does not exists', 'error_msg': str(e)})

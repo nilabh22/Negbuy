@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'negbuyapi',
     'procureapp',
     'rest_framework',
+    'drf_api_logger',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
 ]
 
 ROOT_URLCONF = 'negbuy.urls'
@@ -149,3 +151,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = 'media/'
+
+DRF_API_LOGGER_DATABASE = True
+DRF_API_LOGGER_SIGNAL = True
