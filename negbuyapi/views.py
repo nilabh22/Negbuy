@@ -124,18 +124,21 @@ def seller_login(request):
         return Response(response, status=200)
 
 
+def getCSVField(request, key):
+    dataList = dict((request.data).lists())[key]
+    keyData = ', '.join(dataList)
+    return keyData
+
+
 def addProduct(request, user):
-    name = request.data['name']
+    price_choice = request.data['price_choice'].lower()
+
     category = request.data['category']
     try:
         category_record = productCategory.objects.get(name=category)
     except:
         category_record = productCategory.objects.create(name=category)
-    keyword = request.data['keywords']
-    color = request.data['colors']
-    size = request.data['size']
-    details = request.data['details']
-    price_choice = request.data['price_choice'].lower()
+
     ex_work = request.data['ex_work']
     fob = request.data['fob']
     cif = request.data['cif']
@@ -144,20 +147,16 @@ def addProduct(request, user):
         terms_record = paymentTermFields.objects.get(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
     except:
         terms_record = paymentTermFields.objects.create(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
-    weight = request.data['weight']
-    transportation_port = request.data['transportation_port']
-    packing_details = request.data['packing_details']
-    packing_address = request.data['packing_address']
 
     if price_choice == 'add price':
         product_record = product.objects.create(
             user = user,
-            name = name,
+            name = request.data['name'],
             category_id = category_record,
-            keyword = keyword,
-            color = color,
-            size = size,
-            details = details,
+            keyword = getCSVField(request, 'keywords'),
+            color = getCSVField(request, 'colors'),
+            size = getCSVField(request, 'size'),
+            details = getCSVField(request, 'details'),
             price_choice = price_choice,
             price = request.data['price'],
             mrp =  request.data['mrp'],
@@ -167,41 +166,35 @@ def addProduct(request, user):
             manufacturing_time = request.data['manufacturing_time'],
             maximum_order_quantity = request.data['maximum_order_quantity'],
             terms = terms_record,
-            weight = weight,
-            transportation_port = transportation_port,
-            packing_details = packing_details,
-            packing_address =  packing_address
+            weight = request.data['weight'],
+            transportation_port = request.data['transportation_port'],
+            packing_details = request.data['packing_details'],
+            packing_address =  request.data['packing_address']
         )
-        try:
-            images = dict((request.data).lists())['image']
-            for image in images:
-                productImages.objects.create(product = product_record, image = image)
-        except:
-            pass
+        images = dict((request.data).lists())['image']
+        for image in images:
+            productImages.objects.create(product = product_record, image = image)
 
     elif price_choice == 'price according to quantity':
         product_record = product.objects.create(
             user = user,
-            name = name,
+            name = request.data['name'],
             category_id = category_record,
-            keyword = keyword,
-            color = color,
-            size = size, 
-            details = details,
+            keyword = getCSVField(request, 'keywords'),
+            color = getCSVField(request, 'colors'),
+            size = getCSVField(request, 'size'),
+            details = getCSVField(request, 'details'),
             price_choice = price_choice,
             quantity_price = request.data['quantity_price'],
             terms = terms_record,
-            weight = weight,
-            transportation_port = transportation_port,
-            packing_details = packing_details,
-            packing_address =  packing_address
+            weight = request.data['weight'],
+            transportation_port = request.data['transportation_port'],
+            packing_details = request.data['packing_details'],
+            packing_address =  request.data['packing_address']
         )
-        try:
-            images = dict((request.data).lists())['image']
-            for image in images:
-                productImages.objects.create(product = product_record, image = image)
-        except:
-            pass
+        images = dict((request.data).lists())['image']
+        for image in images:
+            productImages.objects.create(product = product_record, image = image)
 
 
 @api_view(['POST'])
