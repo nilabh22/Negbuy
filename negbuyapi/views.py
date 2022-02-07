@@ -124,12 +124,6 @@ def seller_login(request):
         return Response(response, status=200)
 
 
-def getCSVField(request, key):
-    dataList = dict((request.data).lists())[key]
-    keyData = ', '.join(dataList)
-    return keyData
-
-
 def addProduct(request, user):
     price_choice = request.data['price_choice'].lower()
 
@@ -153,10 +147,10 @@ def addProduct(request, user):
             user = user,
             name = request.data['name'],
             category_id = category_record,
-            keyword = getCSVField(request, 'keywords'),
-            color = getCSVField(request, 'colors'),
-            size = getCSVField(request, 'size'),
-            details = getCSVField(request, 'details'),
+            keyword = request.data['keywords'],
+            color = request.data['colors'],
+            size = request.data['size'],
+            details = request.data['details'],
             price_choice = price_choice,
             price = request.data['price'],
             mrp =  request.data['mrp'],
@@ -180,10 +174,10 @@ def addProduct(request, user):
             user = user,
             name = request.data['name'],
             category_id = category_record,
-            keyword = getCSVField(request, 'keywords'),
-            color = getCSVField(request, 'colors'),
-            size = getCSVField(request, 'size'),
-            details = getCSVField(request, 'details'),
+            keyword = request.data['keywords'],
+            color = request.data['colors'],
+            size = request.data['size'],
+            details = request.data['details'],
             price_choice = price_choice,
             quantity_price = request.data['quantity_price'],
             terms = terms_record,
@@ -234,10 +228,10 @@ def getProductObject(product):
         'fast_dispatch': product.fast_dispatch,
         'ready_to_ship': product.ready_to_ship,
         'customized_product': product.customized_product,
-        'keyword': product.keyword,
-        'color': product.color,
-        'size': product.size,
-        'details': product.details,
+        'keyword': [str.strip() for str in product.keyword.split(',')],
+        'color':[str.strip() for str in product.color.split(',')],
+        'size': [str.strip() for str in product.size.split(',')],
+        'details': [str.strip() for str in product.details.split(',')],
         'price_choice': product.price_choice,
         'price': product.price,
         'mrp': product.mrp,
