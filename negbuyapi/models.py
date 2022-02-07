@@ -79,14 +79,17 @@ class paymentTermFields(models.Model):
 
 
 class product(models.Model):
+
+    status_choice = (
+        ('verified', 'verified'),
+        ('under verification', 'under verification'),
+    )
+
     user = models.ForeignKey(userDB, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50)
     sku = models.CharField(max_length=50, null=True, blank=True)
     category_id = models.ForeignKey(productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(productInventory, on_delete=models.CASCADE, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(auto_now_add=True)
     featured_products = models.BooleanField(default=False)
     fast_dispatch = models.BooleanField(default=False)
     ready_to_ship = models.BooleanField(default=False)
@@ -109,6 +112,10 @@ class product(models.Model):
     transportation_port = models.CharField(max_length=100, null=True, blank=True)
     packing_details = models.CharField(max_length=100, null=True, blank=True)
     packing_address = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100, choices=status_choice, default="under verification")
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

@@ -259,6 +259,7 @@ def getProductObject(product):
         'transportation_port': product.transportation_port,
         'packing_details': product.packing_details,
         'packing_address': product.packing_address,
+        'status': product.status,
         'created_at': product.created_at,
         'modified_at': product.modified_at,
         'deleted_at': product.deleted_at,
