@@ -217,11 +217,15 @@ def getProductObject(product):
     except:
         imageURL = []
 
-    detailsObject = {}
-    detailsList = [str.strip() for str in product.details.split(',')]
-    for eachDetail in detailsList:
+    detailsList = []
+    list = [str.strip() for str in product.details.split(',')]
+    for eachDetail in list:
         keyValue = eachDetail.split(':')
-        detailsObject[keyValue[0].strip()] = keyValue[1].strip()
+        detailsObject = {
+            'title': keyValue[0].strip(),
+            'description': keyValue[1].strip(),
+        }
+        detailsList.append(detailsObject)
 
     object = {
         'id': product.id,
@@ -237,7 +241,7 @@ def getProductObject(product):
         'keyword': [str.strip() for str in product.keyword.split(',')],
         'color':[str.strip() for str in product.color.split(',')],
         'size': [str.strip() for str in product.size.split(',')],
-        'details': detailsObject,
+        'details': detailsList,
         'price_choice': product.price_choice,
         'price': product.price,
         'mrp': product.mrp,
