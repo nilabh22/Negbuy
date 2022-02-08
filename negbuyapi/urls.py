@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
      path('api/login', views.login, name="negbuy_login"),
      path('api/seller_login', views.seller_login, name="negbuy_seller_login"),
+     path('api/seller_signup', views.seller_signup, name="negbuy_seller_signup"),
 
      path('api/product_info', views.product_info, name="product_info"),
      path('api/product_upload_api', views.product_upload_api, name="product_upload_api"),

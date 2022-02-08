@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Q
 from drf_api_logger import API_LOGGER_SIGNAL
 from .models import *
 import random
@@ -35,21 +36,14 @@ def apiLogger(request):
     API_LOGGER_SIGNAL.listen = reponseLogger
 
 
-def getOldLoginObject(usr, isSeller=False):
-    if isSeller:
-        object = {
-            'status': False,
-            'user_id': usr.user_id,
-            'phone': usr.phone,
-            'password': usr.password,
-            'seller_name': usr.seller_name,
-            'company': usr.company,
-            'gstNo': usr.gst_number,
-            'language': '',
-            'user_bio': 0 if usr.seller_name == None else 1,
-        }
-    else:
-        object = {
+@api_view(['POST'])
+def login(request):
+    user_id = request.headers['User-id']
+    phone = request.data['phone']
+
+    try:
+        usr = userDB.objects.get(user_id=user_id)
+        response = {
             'status': False,
             'user_id': usr.user_id,
             'phone': usr.phone,
@@ -58,44 +52,19 @@ def getOldLoginObject(usr, isSeller=False):
             'language': '',
             'user_bio': 0 if usr.first_name == None else 1,
         }
-    return object  
-
-
-def getNewLoginObject(user_id, phone, password='', isSeller=False):
-    if isSeller:
-        object = {
-            'status': True,
-            'user_id': user_id,
-            'phone': phone,
-            'password': password,
-            'seller_name':'',
-        }
-    else:
-        object = {
-            'status': True,
-            'user_id': user_id,
-            'phone': phone,
-            'first_name': '',
-            'last_name': '',
-        }
-    return object
-
-
-@api_view(['POST'])
-def login(request):
-    user_id = request.headers['User-id']
-    phone = request.data['phone']
-
-    try:
-        usr = userDB.objects.get(user_id=user_id)
-        response = getOldLoginObject(usr)
 
     except:
         userDB.objects.create(
             user_id=user_id,
             phone=phone
         )
-        response = getNewLoginObject(user_id, phone)
+        response = {
+            'status': True,
+            'user_id': user_id,
+            'phone': phone,
+            'first_name': '',
+            'last_name': '',
+        }
 
     finally:
         return Response(response, status=200)
@@ -103,13 +72,58 @@ def login(request):
 
 @api_view(['POST'])
 def seller_login(request):
+    phone = request.data['phone']
+    password = request.data['password']
+
+    try:
+        usr = userDB.objects.get(role='Seller', phone=phone, password=password)
+        try:
+            usrBank = bankDetail.objects.get(user=usr)
+            accountName = usrBank.accountName
+            accountNumber = usrBank.accountNumber
+            accountIfsc = usrBank.accountIfsc
+        except:
+            accountName = None
+            accountNumber = None
+            accountIfsc = None
+        response = {
+            'status': True,
+            'user_id': usr.user_id,
+            'phone': usr.phone,
+            'password': usr.password,
+            'seller_name': usr.seller_name,
+            'date_of_birth': usr.date_of_birth,
+            'company': usr.company,
+            'gst_number': usr.gst_number,
+            'account_name': accountName,
+            'account_number': accountNumber,
+            'account_ifsc': accountIfsc
+        }
+
+    except Exception as e:
+        response = {
+            'status': False,
+            'message': 'Incorrect phone or password',
+            'error_msg': str(e)
+        }
+
+    finally:
+        return Response(response, status=200)
+
+
+@api_view(['POST'])
+def seller_signup(request):
     user_id = request.headers['User-id']
     password = request.data['password']
     phone = request.data['phone']
 
     try:
-        usr = userDB.objects.get(user_id=user_id)
-        response = getOldLoginObject(usr, True)
+        usr = userDB.objects.get(Q(user_id=user_id) | Q(phone=phone))
+        sameField = 'User Id ' if usr.user_id == user_id else 'Phone number '
+        response = {
+            'status': False,
+            'message': sameField + 'already exists'
+        }
 
     except:
         userDB.objects.create(
@@ -118,7 +132,13 @@ def seller_login(request):
             phone=phone,
             role="Seller"  
         )
-        response = getNewLoginObject(user_id, phone, password, True)
+        response = {
+            'status': True,
+            'user_id': user_id,
+            'phone': phone,
+            'password': password,
+            'seller_name':'',
+        }
 
     finally:
         return Response(response, status=200)
