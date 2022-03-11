@@ -7,34 +7,8 @@ import random
 import requests
 import bs4
 import datetime
-
-
-
-def requestLogger(request):
-    log_response = '{request=' + str(dict(request.data)) + ' '
-    logFile = open('static/log/negbuyapi_access.log', 'a')
-    logFile.write(log_response)
-    logFile.close()
-
-
-def reponseLogger(**kwargs):
-    client_ip = kwargs['client_ip_address']
-    dt = str(datetime.datetime.now())
-    method = kwargs['method']
-    api = kwargs['api']
-    status = str(kwargs['status_code'])
-    execution_time = str(kwargs['execution_time'])
-    response = str(kwargs['response'])
-    log_response = client_ip + ' [' + dt + '] ' + method + " " + api + " " + status + " " + execution_time + " response=" + response + "}"
-    logFile = open('static/log/negbuyapi_access.log', 'a')
-    logFile.write(log_response + '\n')
-    logFile.close()
-
-
-def apiLogger(request):
-    requestLogger(request)
-    API_LOGGER_SIGNAL.listen = reponseLogger
-
+import os
+from .contactus import contact_function
 
 @api_view(['POST'])
 def login(request):
@@ -153,20 +127,12 @@ def addProduct(request, user):
     except:
         category_record = productCategory.objects.create(name=category)
 
-    ex_work = request.data['ex_work']
-    fob = request.data['fob']
-    cif = request.data['cif']
-    ddp = request.data['ddp']
-    try:
-        terms_record = paymentTermFields.objects.get(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
-    except:
-        terms_record = paymentTermFields.objects.create(ex_work=ex_work, fob=fob, cif=cif, ddp=ddp)
-
     if price_choice == 'add price':
         product_record = product.objects.create(
             user = user,
             name = request.data['name'],
             category_id = category_record,
+            brand = request.data['brand'],
             keyword = request.data['keywords'],
             color = request.data['colors'],
             size = request.data['size'],
@@ -179,12 +145,12 @@ def addProduct(request, user):
             sale_enddate = request.data['sale_enddate'],
             manufacturing_time = request.data['manufacturing_time'],
             maximum_order_quantity = request.data['maximum_order_quantity'],
-            terms = terms_record,
             weight = request.data['weight'],
             transportation_port = request.data['transportation_port'],
             packing_details = request.data['packing_details'],
             packing_address =  request.data['packing_address']
         )
+        product_record.save()
         images = dict((request.data).lists())['image']
         for image in images:
             productImages.objects.create(product = product_record, image = image)
@@ -200,12 +166,13 @@ def addProduct(request, user):
             details = request.data['details'],
             price_choice = price_choice,
             quantity_price = request.data['quantity_price'],
-            terms = terms_record,
+            #terms = terms_record,
             weight = request.data['weight'],
             transportation_port = request.data['transportation_port'],
             packing_details = request.data['packing_details'],
             packing_address =  request.data['packing_address']
         )
+        product_record.save()
         images = dict((request.data).lists())['image']
         for image in images:
             productImages.objects.create(product = product_record, image = image)
@@ -217,7 +184,6 @@ def product_upload_api(request):
     try:
         user = userDB.objects.get(user_id=user_id, role='Seller')
         addProduct(request, user)
-        apiLogger(request)
         return Response({'success': 'Product Added'}, status=200)
     except Exception as e:
         return Response({'status': 'Error', 'error_msg': str(e)})
@@ -258,6 +224,7 @@ def getProductObject(product):
         'fast_dispatch': product.fast_dispatch,
         'ready_to_ship': product.ready_to_ship,
         'customized_product': product.customized_product,
+        'brand':product.brand,
         'keyword': [str.strip() for str in product.keyword.split(',')],
         'color':[str.strip() for str in product.color.split(',')],
         'size': [str.strip() for str in product.size.split(',')],
@@ -271,10 +238,6 @@ def getProductObject(product):
         'manufacturing_time': product.manufacturing_time,
         'quantity_price': product.quantity_price,
         'maximum_order_quantity': product.maximum_order_quantity,
-        'ex_work': product.terms.ex_work,
-        'fob': product.terms.fob,
-        'cif': product.terms.cif,
-        'ddp': product.terms.ddp,
         'weight': product.weight,
         'transportation_port': product.transportation_port,
         'packing_details': product.packing_details,
@@ -297,7 +260,6 @@ def product_info(request):
         product_id = request.data['product_id']
         product_info = product.objects.get(id=product_id)
         product_object = getProductObject(product_info)
-        apiLogger(request)
         return Response(product_object, status=200)
     except Exception as e:
         return Response({'status': 'Product id does not exists', 'error_msg': str(e)})
@@ -547,20 +509,24 @@ def seller_details(request):
 @api_view(['POST'])
 def search_category(request):
     response = []
+    category_selected = request.data['category_selected']
     raw_string = request.data['category']
     keywords = raw_string.replace('>', '').replace('& ', '').replace('and ', '').strip()
+    print(category_selected, raw_string, keywords)
 
     if len(keywords) == 0:
         return Response(response, status=200)
     else:
-        with open('static/categories/categories.txt') as file:
+        file_path = 'static/categories/'+str(category_selected).strip()+'.txt'
+        print(file_path)
+        with open(file_path) as file:
             for line in file:
                 if keywords.lower() in line.lower().replace('& ', ''):
                     response.append(line.strip())
             if len(response) == 0:
                 keywords = keywords.replace(',', '')
                 keywordList = keywords.split(' ')
-                with open('static/categories/categories.txt') as file:
+                with open(file_path) as file:
                     for line in file:
                         if any(keyword.lower() in line.lower() for keyword in keywordList):
                             response.append(line.strip())
@@ -580,3 +546,84 @@ def get_ports(request):
     for each_port in all_ports:
         response.append(getPort(each_port))
     return Response(response, status=200)
+
+@api_view(['GET'])
+def get_categories(request):
+    try:
+        #/home/vf2586e813kg/api.negbuy/static
+        path = "/home/vf2586e813kg/api.negbuy/static/categories"
+        dir_list = os.listdir(path)
+        mylst = map(lambda each:each.strip(".txt"), dir_list)
+
+        return Response({
+            'status':True,
+            'message':'Success',
+            'data':mylst
+        })
+    except Exception as e:
+        return Response({
+            'status':False,
+            'message':e,
+            'data':''
+        })
+    
+@api_view(['GET'])
+def get_orders(request):
+    user_id = request.headers['User-id']
+    all_orders_list = list()
+    try:
+        usr = userDB.objects.get(user_id=user_id, role='Seller')
+        #get orders details
+        all_orders = orders.objects.filter(user=usr)
+        for each_order in all_orders:
+            obj = {
+                'order_date':each_order.created_at,
+                'order_number':each_order.order_number,
+                'product_name':each_order.product_info.name,
+                'product_quantity':each_order.order_quantity,
+                'ship_date':each_order.shipping_date,
+                'delivery_date':each_order.delivery_date,
+                'order_status':each_order.status
+            }
+
+            all_orders_list.append(obj)
+        return Response({
+            'status':True,
+            'message':'Success',
+            'data':all_orders_list
+        })
+    except Exception as e:
+        return Response({
+            'status':False,
+            'message':e,
+            'data':''
+        })
+
+
+@api_view(['POST'])
+def contactus_function(request):
+    try:
+        name = request.data['name']
+        contact_num = request.data['number']
+        req_email = request.data['email']
+        message = request.data['message']
+        full_message = "Please contact "+name+" "+contact_num+" "+req_email+" for "+message
+        cont_res = contact_data.objects.create(message=full_message)
+        if cont_res:
+            return Response({
+                    'status':True,
+                    'message':'Success',
+                    'data':"Message sent"
+                })
+        else:
+            return Response({
+                    'status':False,
+                    'message':'Error',
+                    'data':"Please enter details again"
+                })
+    except:
+        return Response({
+                    'status':False,
+                    'message':'Error',
+                    'data':"Please enter details again"
+                })

@@ -27,7 +27,12 @@ urlpatterns = [
      path('api/seller_details', views.seller_details, name="seller_details"),
 
      path('api/search_category', views.search_category, name="search_category"),
-     path('api/get_ports', views.get_ports, name="get_ports")
+     path('api/get_ports', views.get_ports, name="get_ports"),
+     path('api/get_categories', views.get_categories, name="get_categories"),
+
+     path('api/get_orders', views.get_orders, name="get_orders"),
+
+     path('api/contactus', views.contactus_function, name="contactus_function")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -94,6 +94,7 @@ class product(models.Model):
     fast_dispatch = models.BooleanField(default=False)
     ready_to_ship = models.BooleanField(default=False)
     customized_product = models.BooleanField(default=False)
+    brand = models.CharField(max_length=1000, null=True, blank=True)
     keyword = models.CharField(max_length=1000, null=True, blank=True)
     color = models.CharField(max_length=1000, null=True, blank=True)
     size = models.CharField(max_length=1000, null=True, blank=True)
@@ -101,7 +102,7 @@ class product(models.Model):
     price_choice = models.CharField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
     mrp = models.IntegerField(null=True, blank=True)
-    sale_price = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
+    sale_price = models.CharField(max_length=100, null=True, blank=True)
     sale_startdate = models.CharField(max_length=100, null=True, blank=True)
     sale_enddate = models.CharField(max_length=100, null=True, blank=True)
     manufacturing_time = models.CharField(max_length=100, null=True, blank=True)
@@ -116,6 +117,7 @@ class product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return self.name
@@ -169,3 +171,25 @@ class port(models.Model):
 
     class Meta:
         verbose_name_plural = "Port"
+
+
+class orders(models.Model):
+    order_number = models.CharField(max_length=1000, null=True, blank=True)
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    product_info = models.ForeignKey(product, on_delete=models.CASCADE)
+    order_quantity = models.CharField(max_length=1000, null=True, blank=True)
+    shipping_date = models.CharField(max_length=1000, null=True, blank=True)
+    delivery_date = models.CharField(max_length=1000, null=True, blank=True)
+    status = models.CharField(max_length=1000, null=True, blank=True)  #in future choice fields
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return str(self.user)
+
+    class Meta:
+        verbose_name_plural = "Orders"
+
+
+class contact_data(models.Model):
+    message = models.CharField(max_length=1000, blank=True, null=True)
