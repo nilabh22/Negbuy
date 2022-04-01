@@ -145,6 +145,7 @@ def addProduct(request, user):
             sale_enddate = request.data['sale_enddate'],
             manufacturing_time = request.data['manufacturing_time'],
             maximum_order_quantity = request.data['maximum_order_quantity'],
+            #terms = terms_record,
             weight = request.data['weight'],
             transportation_port = request.data['transportation_port'],
             packing_details = request.data['packing_details'],
@@ -627,3 +628,26 @@ def contactus_function(request):
                     'message':'Error',
                     'data':"Please enter details again"
                 })
+
+@api_view(['POST'])
+def delete_product(request):
+    try:
+        user = request.headers['User-id']
+        product_id = request.data['product_id']
+
+        user_details = userDB.objects.get(user_id = user)
+        product_details = product.objects.get(id=product_id, user=user_details).delete()
+  
+        
+        return Response({
+                    'status':True,
+                    'message':'Success',
+                    'data':"Deleted successfully"
+                })
+    except Exception as e:
+        return Response({
+                'status':False,
+                'message':'Error',
+                'data':str(e)
+            })
+    

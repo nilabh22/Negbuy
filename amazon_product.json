@@ -13,7 +13,7 @@
         },
     "request_parameters":{
         "type":"product",
-        "amazon_domain":"negbuy.com",
+        "domain":"negbuy.com",
         "Product_id":"1"
         },
     "product":{
