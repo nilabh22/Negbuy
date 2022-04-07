@@ -9,6 +9,9 @@ import bs4
 import datetime
 import os
 from .contactus import contact_function
+from .serializers import ProductSerializer, ImageSerializer
+from django.forms.models import model_to_dict
+
 
 @api_view(['POST'])
 def login(request):
@@ -104,14 +107,14 @@ def seller_signup(request):
             user_id=user_id,
             password=password,
             phone=phone,
-            role="Seller"  
+            role="Seller"
         )
         response = {
             'status': True,
             'user_id': user_id,
             'phone': phone,
             'password': password,
-            'seller_name':'',
+            'seller_name': '',
         }
 
     finally:
@@ -129,54 +132,54 @@ def addProduct(request, user):
 
     if price_choice == 'add price':
         product_record = product.objects.create(
-            user = user,
-            name = request.data['name'],
-            category_id = category_record,
-            brand = request.data['brand'],
-            keyword = request.data['keywords'],
-            color = request.data['colors'],
-            size = request.data['size'],
-            details = request.data['details'],
-            price_choice = price_choice,
-            price = request.data['price'],
-            mrp =  request.data['mrp'],
-            sale_price = request.data['sale_price'],
-            sale_startdate = request.data['sale_startdate'],
-            sale_enddate = request.data['sale_enddate'],
-            manufacturing_time = request.data['manufacturing_time'],
-            maximum_order_quantity = request.data['maximum_order_quantity'],
+            user=user,
+            name=request.data['name'],
+            category_id=category_record,
+            brand=request.data['brand'],
+            keyword=request.data['keywords'],
+            color=request.data['colors'],
+            size=request.data['size'],
+            details=request.data['details'],
+            price_choice=price_choice,
+            price=request.data['price'],
+            mrp=request.data['mrp'],
+            sale_price=request.data['sale_price'],
+            sale_startdate=request.data['sale_startdate'],
+            sale_enddate=request.data['sale_enddate'],
+            manufacturing_time=request.data['manufacturing_time'],
+            maximum_order_quantity=request.data['maximum_order_quantity'],
             #terms = terms_record,
-            weight = request.data['weight'],
-            transportation_port = request.data['transportation_port'],
-            packing_details = request.data['packing_details'],
-            packing_address =  request.data['packing_address']
+            weight=request.data['weight'],
+            transportation_port=request.data['transportation_port'],
+            packing_details=request.data['packing_details'],
+            packing_address=request.data['packing_address']
         )
         product_record.save()
         images = dict((request.data).lists())['image']
         for image in images:
-            productImages.objects.create(product = product_record, image = image)
+            productImages.objects.create(product=product_record, image=image)
 
     elif price_choice == 'price according to quantity':
         product_record = product.objects.create(
-            user = user,
-            name = request.data['name'],
-            category_id = category_record,
-            keyword = request.data['keywords'],
-            color = request.data['colors'],
-            size = request.data['size'],
-            details = request.data['details'],
-            price_choice = price_choice,
-            quantity_price = request.data['quantity_price'],
+            user=user,
+            name=request.data['name'],
+            category_id=category_record,
+            keyword=request.data['keywords'],
+            color=request.data['colors'],
+            size=request.data['size'],
+            details=request.data['details'],
+            price_choice=price_choice,
+            quantity_price=request.data['quantity_price'],
             #terms = terms_record,
-            weight = request.data['weight'],
-            transportation_port = request.data['transportation_port'],
-            packing_details = request.data['packing_details'],
-            packing_address =  request.data['packing_address']
+            weight=request.data['weight'],
+            transportation_port=request.data['transportation_port'],
+            packing_details=request.data['packing_details'],
+            packing_address=request.data['packing_address']
         )
         product_record.save()
         images = dict((request.data).lists())['image']
         for image in images:
-            productImages.objects.create(product = product_record, image = image)
+            productImages.objects.create(product=product_record, image=image)
 
 
 @api_view(['POST'])
@@ -225,9 +228,9 @@ def getProductObject(product):
         'fast_dispatch': product.fast_dispatch,
         'ready_to_ship': product.ready_to_ship,
         'customized_product': product.customized_product,
-        'brand':product.brand,
+        'brand': product.brand,
         'keyword': [str.strip() for str in product.keyword.split(',')],
-        'color':[str.strip() for str in product.color.split(',')],
+        'color': [str.strip() for str in product.color.split(',')],
         'size': [str.strip() for str in product.size.split(',')],
         'details': detailsList,
         'price_choice': product.price_choice,
@@ -268,19 +271,32 @@ def product_info(request):
 
 @api_view(['GET'])
 def featured_product_api(request):
-    featured_product_list = []
-    featured_products = product.objects.filter(featured_products=True)[:10]
-    for each_product in featured_products:
-        featured_product_list.append(getProductObject(each_product))
-
-    if len(featured_product_list) != 10:
-        products = list(product.objects.filter(featured_products=False))
-        random_products = random.sample(
-            products, 10-len(featured_product_list))
-        for each_product in random_products:
+    try:
+        featured_product_list = []
+        featured_products = product.objects.filter(featured_products=True)[:10]
+        
+        for each_product in featured_products:
             featured_product_list.append(getProductObject(each_product))
 
-    return Response(featured_product_list, status=200)
+        if len(featured_product_list) != 10:
+            products = list(product.objects.filter(featured_products=False))
+            random_products = random.sample(
+                products, 10-len(featured_product_list))
+            for each_product in random_products:
+                featured_product_list.append(getProductObject(each_product))
+
+        return Response({
+            'status': 'True',
+            'message': 'Success',
+            'data': featured_product_list
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+            'data': ''
+        })
 
 
 @api_view(['GET'])
@@ -383,7 +399,8 @@ def remove_from_cart(request):
         usr = userDB.objects.get(user_id=user_id)
         product_id = int(request.data['product_id'])
         removed_quantity = int(request.data['removed_quantity'])
-        item_quantity = cart.objects.get(user_id=usr.id, product_id=product_id).quantity
+        item_quantity = cart.objects.get(
+            user_id=usr.id, product_id=product_id).quantity
         new_quantity = item_quantity - removed_quantity
 
         if new_quantity <= 0:
@@ -456,7 +473,7 @@ def verify_gst(request):
         addr = "https://irisgst.com/gstin-filing-detail/?gstinno=" + gst_number
         response = requests.get(addr)
         htmlPage = bs4.BeautifulSoup(response.text, "html.parser")
-        divData = htmlPage.find_all('div', {'class':'form-group'})
+        divData = htmlPage.find_all('div', {'class': 'form-group'})
         response = getGstObject(gst_number, divData)
         usr.gst_number = gst_number
         usr.save(update_fields=['gst_number'])
@@ -500,7 +517,8 @@ def seller_details(request):
         usr.company = request.data['company']
         usr.address = request.data['address']
         usr.document_verification = request.FILES['document_verification']
-        usr.save(update_fields=['seller_name', 'date_of_birth', 'email', 'company', 'address', 'document_verification'])
+        usr.save(update_fields=['seller_name', 'date_of_birth',
+                 'email', 'company', 'address', 'document_verification'])
         return Response({'status': 'success'}, status=200)
 
     except Exception as e:
@@ -512,7 +530,8 @@ def search_category(request):
     response = []
     category_selected = request.data['category_selected']
     raw_string = request.data['category']
-    keywords = raw_string.replace('>', '').replace('& ', '').replace('and ', '').strip()
+    keywords = raw_string.replace('>', '').replace(
+        '& ', '').replace('and ', '').strip()
     print(category_selected, raw_string, keywords)
 
     if len(keywords) == 0:
@@ -548,56 +567,58 @@ def get_ports(request):
         response.append(getPort(each_port))
     return Response(response, status=200)
 
+
 @api_view(['GET'])
 def get_categories(request):
     try:
-        #/home/vf2586e813kg/api.negbuy/static
+        # /home/vf2586e813kg/api.negbuy/static
         path = "/home/vf2586e813kg/api.negbuy/static/categories"
         dir_list = os.listdir(path)
-        mylst = map(lambda each:each.strip(".txt"), dir_list)
+        mylst = map(lambda each: each.strip(".txt"), dir_list)
 
         return Response({
-            'status':True,
-            'message':'Success',
-            'data':mylst
+            'status': True,
+            'message': 'Success',
+            'data': mylst
         })
     except Exception as e:
         return Response({
-            'status':False,
-            'message':e,
-            'data':''
+            'status': False,
+            'message': e,
+            'data': ''
         })
-    
+
+
 @api_view(['GET'])
 def get_orders(request):
     user_id = request.headers['User-id']
     all_orders_list = list()
     try:
         usr = userDB.objects.get(user_id=user_id, role='Seller')
-        #get orders details
+        # get orders details
         all_orders = orders.objects.filter(user=usr)
         for each_order in all_orders:
             obj = {
-                'order_date':each_order.created_at,
-                'order_number':each_order.order_number,
-                'product_name':each_order.product_info.name,
-                'product_quantity':each_order.order_quantity,
-                'ship_date':each_order.shipping_date,
-                'delivery_date':each_order.delivery_date,
-                'order_status':each_order.status
+                'order_date': each_order.created_at,
+                'order_number': each_order.order_number,
+                'product_name': each_order.product_info.name,
+                'product_quantity': each_order.order_quantity,
+                'ship_date': each_order.shipping_date,
+                'delivery_date': each_order.delivery_date,
+                'order_status': each_order.status
             }
 
             all_orders_list.append(obj)
         return Response({
-            'status':True,
-            'message':'Success',
-            'data':all_orders_list
+            'status': True,
+            'message': 'Success',
+            'data': all_orders_list
         })
     except Exception as e:
         return Response({
-            'status':False,
-            'message':e,
-            'data':''
+            'status': False,
+            'message': e,
+            'data': ''
         })
 
 
@@ -608,26 +629,28 @@ def contactus_function(request):
         contact_num = request.data['number']
         req_email = request.data['email']
         message = request.data['message']
-        full_message = "Please contact "+name+" "+contact_num+" "+req_email+" for "+message
+        full_message = "Please contact "+name+" " + \
+            contact_num+" "+req_email+" for "+message
         cont_res = contact_data.objects.create(message=full_message)
         if cont_res:
             return Response({
-                    'status':True,
-                    'message':'Success',
-                    'data':"Message sent"
-                })
+                'status': True,
+                'message': 'Success',
+                'data': "Message sent"
+            })
         else:
             return Response({
-                    'status':False,
-                    'message':'Error',
-                    'data':"Please enter details again"
-                })
+                'status': False,
+                'message': 'Error',
+                'data': "Please enter details again"
+            })
     except:
         return Response({
-                    'status':False,
-                    'message':'Error',
-                    'data':"Please enter details again"
-                })
+            'status': False,
+            'message': 'Error',
+            'data': "Please enter details again"
+        })
+
 
 @api_view(['POST'])
 def delete_product(request):
@@ -635,19 +658,110 @@ def delete_product(request):
         user = request.headers['User-id']
         product_id = request.data['product_id']
 
-        user_details = userDB.objects.get(user_id = user)
-        product_details = product.objects.get(id=product_id, user=user_details).delete()
-  
-        
+        user_details = userDB.objects.get(user_id=user)
+        product_details = product.objects.get(
+            id=product_id, user=user_details).delete()
+
         return Response({
-                    'status':True,
-                    'message':'Success',
-                    'data':"Deleted successfully"
-                })
+            'status': True,
+            'message': 'Success',
+            'data': "Deleted successfully"
+        })
     except Exception as e:
         return Response({
-                'status':False,
-                'message':'Error',
-                'data':str(e)
-            })
-    
+            'status': False,
+            'message': 'Error',
+            'data': str(e)
+        })
+
+
+@api_view(['POST'])
+def product_detail(request):
+    try:
+        # user = request.headers['User-id']
+        product_id = request.data['product_id']
+        response = []
+        image_list = []
+
+        product_details = product.objects.filter(id=product_id)
+        image_details = productImages.objects.filter(product__id=product_id)
+
+        serializer = ProductSerializer(product_details, many=True)
+        img_serializer = ImageSerializer(image_details, many=True)
+        for dic in img_serializer.data:
+            for key in dic:
+                if key == 'image':
+                    image_list.append(dic[key])
+
+        return Response({
+            'status': True,
+            'message': 'Success',
+            'data': serializer.data,
+            'images': image_list
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'False',
+            'message': 'Error',
+            'data': str(e)
+        })
+
+
+@api_view(['GET'])
+def best_selling(request):
+    try:
+        best_selling_list = []
+        best_selling = product.objects.filter(best_selling_products=True)[:10]
+        for each_product in best_selling:
+            best_selling_list.append(getProductObject(each_product))
+
+        if len(best_selling_list) != 10:
+            products = list(product.objects.filter(
+                best_selling_products=False))
+            random_products = random.sample(
+                products, 10-len(best_selling_list))
+            for each_product in random_products:
+                best_selling_list.append(getProductObject(each_product))
+
+        return Response({
+            'status': 'True',
+            'message': 'Success',
+            'data': best_selling_list
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+            'data': ''
+        })
+
+
+@api_view(['GET'])
+def hot_selling(request):
+    try:
+        hot_selling_list = []
+        hot_selling = product.objects.filter(hot_selling_products=True)[:10]
+        for each_product in hot_selling:
+            hot_selling_list.append(getProductObject(each_product))
+
+        if len(hot_selling_list) != 10:
+            products = list(product.objects.filter(hot_selling_products=False))
+            random_products = random.sample(
+                products, 10-len(hot_selling_list))
+            for each_product in random_products:
+                hot_selling_list.append(getProductObject(each_product))
+
+        return Response({
+            'status': 'True',
+            'message': 'Success',
+            'data': hot_selling_list
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+            'data': ''
+        })

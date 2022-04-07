@@ -12,7 +12,7 @@ class readFields(admin.ModelAdmin):
 
 admin.site.register(productCategory, readFields)
 admin.site.register(productInventory, readFields)
-admin.site.register(paymentTermFields, readIdField)
+# admin.site.register(paymentTermFields, readIdField)
 admin.site.register(product, readFields)
 admin.site.register(productImages)
 admin.site.register(userDB, readIdField)
