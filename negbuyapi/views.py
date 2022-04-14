@@ -228,6 +228,7 @@ def getProductObject(product):
         'sku': product.sku,
         'category': product.category_id.name,
         'inventory': inventory,
+        'main_image': str(product.main_image),
         'image': imageURL,
         'featured_products': product.featured_products,
         'best_selling_products': product.best_selling_products,
@@ -831,7 +832,6 @@ def categorized_product(request):
 
         product_list = product.objects.filter(category_id__name=category)
         serializer = ProductSerializer(product_list, many=True)
-        
 
         return Response({
             'status': True,
@@ -845,3 +845,6 @@ def categorized_product(request):
             'message': e,
             'data': ''
         })
+
+
+# ---------------------------- Seller.Negbuy -------------------------------------- #

@@ -85,6 +85,7 @@ class product(models.Model):
         productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(
         productInventory, on_delete=models.CASCADE, null=True)
+    main_image = models.ImageField(upload_to='main_images', default=None, blank=True, null=True)
     featured_products = models.BooleanField(default=False)
     best_selling_products = models.BooleanField(default=False)
     hot_selling_products = models.BooleanField(default=False)

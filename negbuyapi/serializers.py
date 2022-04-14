@@ -21,6 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'featured_products',
             'best_selling_products',
             'hot_selling_products',
+            'main_image',
             'fast_dispatch',
             'ready_to_ship',
             'customized_product',
