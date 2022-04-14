@@ -41,6 +41,7 @@ urlpatterns = [
     path('api/product_detail', views.product_detail, name="product_detail"),
     path('api/best_selling', views.best_selling, name="best_selling_product"),
     path('api/hot_selling', views.hot_selling, name="hot_selling_product"),
+    path('api/categorized_product', views.categorized_product, name="product_category"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -8,9 +8,9 @@ import requests
 import bs4
 import datetime
 import os
+# import os.path
 from .contactus import contact_function
 from .serializers import ProductSerializer, ImageSerializer
-from django.forms.models import model_to_dict
 
 
 @api_view(['POST'])
@@ -200,6 +200,11 @@ def getProductObject(product):
         inventory = ''
 
     try:
+        productCategory = product.category_id.name
+    except:
+        productCategory = ''
+
+    try:
         prodImages = productImages.objects.filter(product=product)
         imageURL = []
         for prodImage in prodImages:
@@ -225,6 +230,8 @@ def getProductObject(product):
         'inventory': inventory,
         'image': imageURL,
         'featured_products': product.featured_products,
+        'best_selling_products': product.best_selling_products,
+        'hot_selling_products': product.hot_selling_products,
         'fast_dispatch': product.fast_dispatch,
         'ready_to_ship': product.ready_to_ship,
         'customized_product': product.customized_product,
@@ -274,22 +281,31 @@ def featured_product_api(request):
     try:
         featured_product_list = []
         featured_products = product.objects.filter(featured_products=True)[:10]
-        
-        for each_product in featured_products:
-            featured_product_list.append(getProductObject(each_product))
 
-        if len(featured_product_list) != 10:
-            products = list(product.objects.filter(featured_products=False))
-            random_products = random.sample(
-                products, 10-len(featured_product_list))
-            for each_product in random_products:
+        if featured_products.exists():
+            for each_product in featured_products:
                 featured_product_list.append(getProductObject(each_product))
+            if len(featured_product_list) != 10:
+                products = list(product.objects.filter(
+                    featured_products=False))
+                random_products = random.sample(
+                    products, 10-len(featured_product_list))
+                for each_product in random_products:
+                    featured_product_list.append(
+                        getProductObject(each_product))
 
-        return Response({
-            'status': 'True',
-            'message': 'Success',
-            'data': featured_product_list
-        })
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': featured_product_list
+            })
+
+        else:
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': []
+            })
 
     except Exception as e:
         return Response({
@@ -528,29 +544,51 @@ def seller_details(request):
 @api_view(['POST'])
 def search_category(request):
     response = []
+
     category_selected = request.data['category_selected']
     raw_string = request.data['category']
-    keywords = raw_string.replace('>', '').replace(
-        '& ', '').replace('and ', '').strip()
+    file_path = 'static/categories/'+str(category_selected).strip()+'.txt'
+
+    if (not (raw_string and raw_string.strip())):
+        keywords = raw_string.replace('>', '').replace(
+            '& ', '').replace('and ', '').strip()
+
     print(category_selected, raw_string, keywords)
 
-    if len(keywords) == 0:
-        return Response(response, status=200)
-    else:
-        file_path = 'static/categories/'+str(category_selected).strip()+'.txt'
-        print(file_path)
-        with open(file_path) as file:
-            for line in file:
-                if keywords.lower() in line.lower().replace('& ', ''):
+    if os.path.exists(file_path):
+        if len(keywords) == 0:
+            with open(file_path) as file:
+                catLines = file.readlines()
+                for line in catLines:
                     response.append(line.strip())
-            if len(response) == 0:
-                keywords = keywords.replace(',', '')
-                keywordList = keywords.split(' ')
-                with open(file_path) as file:
-                    for line in file:
-                        if any(keyword.lower() in line.lower() for keyword in keywordList):
-                            response.append(line.strip())
-        return Response(response, status=200)
+            return Response({
+                'status': True,
+                'message': 'Success',
+                'data': response
+            })
+
+        else:
+            file_path = 'static/categories/' + \
+                str(category_selected).strip()+'.txt'
+            print(file_path)
+            with open(file_path) as file:
+                for line in file:
+                    if keywords.lower() in line.lower().replace('& ', ''):
+                        response.append(line.strip())
+                if len(response) == 0:
+                    keywords = keywords.replace(',', '')
+                    keywordList = keywords.split(' ')
+                    with open(file_path) as file:
+                        for line in file:
+                            if any(keyword.lower() in line.lower() for keyword in keywordList):
+                                response.append(line.strip())
+            return Response(response, status=200)
+    else:
+        return Response({
+            'status': True,
+            'message': 'Success',
+            'data': 'Invalid Category'
+        })
 
 
 def getPort(port):
@@ -573,6 +611,7 @@ def get_categories(request):
     try:
         # /home/vf2586e813kg/api.negbuy/static
         path = "/home/vf2586e813kg/api.negbuy/static/categories"
+        # path = "/Users/habibahmed/Desktop/NegBuy/negbuy/static/categories"
         dir_list = os.listdir(path)
         mylst = map(lambda each: each.strip(".txt"), dir_list)
 
@@ -678,7 +717,6 @@ def delete_product(request):
 @api_view(['POST'])
 def product_detail(request):
     try:
-        # user = request.headers['User-id']
         product_id = request.data['product_id']
         response = []
         image_list = []
@@ -713,22 +751,30 @@ def best_selling(request):
     try:
         best_selling_list = []
         best_selling = product.objects.filter(best_selling_products=True)[:10]
-        for each_product in best_selling:
-            best_selling_list.append(getProductObject(each_product))
-
-        if len(best_selling_list) != 10:
-            products = list(product.objects.filter(
-                best_selling_products=False))
-            random_products = random.sample(
-                products, 10-len(best_selling_list))
-            for each_product in random_products:
+        if best_selling.exists():
+            for each_product in best_selling:
                 best_selling_list.append(getProductObject(each_product))
 
-        return Response({
-            'status': 'True',
-            'message': 'Success',
-            'data': best_selling_list
-        })
+            if len(best_selling_list) != 10:
+                products = list(product.objects.filter(
+                    best_selling_products=False))
+                random_products = random.sample(
+                    products, 10-len(best_selling_list))
+                for each_product in random_products:
+                    best_selling_list.append(getProductObject(each_product))
+
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': best_selling_list
+            })
+
+        else:
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': []
+            })
 
     except Exception as e:
         return Response({
@@ -743,20 +789,54 @@ def hot_selling(request):
     try:
         hot_selling_list = []
         hot_selling = product.objects.filter(hot_selling_products=True)[:10]
-        for each_product in hot_selling:
-            hot_selling_list.append(getProductObject(each_product))
 
-        if len(hot_selling_list) != 10:
-            products = list(product.objects.filter(hot_selling_products=False))
-            random_products = random.sample(
-                products, 10-len(hot_selling_list))
-            for each_product in random_products:
+        if hot_selling.exists():
+            for each_product in hot_selling:
                 hot_selling_list.append(getProductObject(each_product))
 
+            # Adding random Products when out of hot_selling_products
+            if len(hot_selling_list) != 10:
+                products = list(product.objects.filter(
+                    hot_selling_products=False))
+                random_products = random.sample(
+                    products, 10-len(hot_selling_list))
+                for each_product in random_products:
+                    hot_selling_list.append(getProductObject(each_product))
+
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': hot_selling_list
+            })
+        else:
+            return Response({
+                'status': 'True',
+                'message': 'Success',
+                'data': []
+            })
+
+    except Exception as e:
         return Response({
-            'status': 'True',
+            'status': 'Error',
+            'message': e,
+            'data': ''
+        })
+
+
+@api_view(['POST'])
+def categorized_product(request):
+    try:
+        category = request.data['category']
+        imageList = []
+
+        product_list = product.objects.filter(category_id__name=category)
+        serializer = ProductSerializer(product_list, many=True)
+        
+
+        return Response({
+            'status': True,
             'message': 'Success',
-            'data': hot_selling_list
+            'data': serializer.data,
         })
 
     except Exception as e:

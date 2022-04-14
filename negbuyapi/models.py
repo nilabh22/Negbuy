@@ -129,7 +129,7 @@ class product(models.Model):
 
 
 class productImages(models.Model):
-    product = models.ForeignKey(product, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='product_images' ,null=True)
     image = models.ImageField(
         upload_to='Product_images', default=None, blank=True)
 
@@ -197,3 +197,11 @@ class orders(models.Model):
 
 class contact_data(models.Model):
     message = models.CharField(max_length=1000, blank=True, null=True)
+
+
+# class product_category(models.Model):
+#     name = models.CharField(max_length=1000, blank=True, null=True)
+#     prod_category = models.ManyToManyField('productCategory')
+
+#     def __str__(self):
+#         return self.name
