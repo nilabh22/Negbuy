@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import timezone
 
 
 class userDB(models.Model):
@@ -33,7 +34,7 @@ class userDB(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.user_id
+        return f"{self.user_id} | {self.phone}"
 
     class Meta:
         verbose_name_plural = "User"
@@ -47,7 +48,7 @@ class productCategory(models.Model):
     deleted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
     class Meta:
         verbose_name_plural = "Category"
@@ -144,6 +145,12 @@ class productImages(models.Model):
 
 
 class cart(models.Model):
+
+    status_choice = (
+        ('Running', 'Running'),
+        ('Completed', 'Completed'),
+    )
+
     order_number = models.PositiveIntegerField(null=True, blank=False)
     buyer_info = models.ForeignKey(userDB, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
@@ -155,10 +162,11 @@ class cart(models.Model):
     total_price = models.DecimalField(
         null=True, blank=True, decimal_places=4, max_digits=12)
     order_date = models.CharField(max_length=20, null=True, blank=True)
-    order_satus = models.CharField(max_length=1000, null=True, blank=True)
+    order_status = models.CharField(
+        max_length=1000, null=True, blank=True, choices=status_choice)
     order_note = models.CharField(max_length=1000, null=True, blank=True)
     billing_address = models.TextField(max_length=1000, null=True, blank=True)
-    billing_landmark = models.CharField(max_length=100)
+    billing_landmark = models.CharField(max_length=100, null=True, blank=True)
     billing_zipcode = models.CharField(max_length=100, null=True, blank=True)
     billing_city = models.CharField(max_length=1000, null=True, blank=True)
     billing_state = models.CharField(max_length=1000, null=True, blank=True)
@@ -184,9 +192,6 @@ class bankDetail(models.Model):
     accountNumber = models.CharField(max_length=1000, null=True, blank=True)
     accountIfsc = models.CharField(max_length=1000, null=True, blank=True)
 
-    def __str__(self):
-        return self.accountName + ": " + self.accountNumber
-
     class Meta:
         verbose_name_plural = "Bank"
 
@@ -205,14 +210,24 @@ class port(models.Model):
 
 
 class orders(models.Model):
+
+    status_choice = (
+        ('Running', 'Running'),
+        ('Completed', 'Completed'),
+    )
+
     order_number = models.CharField(max_length=1000, null=True, blank=True)
+    order_date = models.DateTimeField(auto_now=True, null=True)
+    order_time = models.TimeField(auto_now_add=False, null=True)
     user = models.ForeignKey(userDB, on_delete=models.CASCADE)
     product_info = models.ForeignKey(product, on_delete=models.CASCADE)
     order_quantity = models.CharField(max_length=1000, null=True, blank=True)
     shipping_date = models.CharField(max_length=1000, null=True, blank=True)
     delivery_date = models.CharField(max_length=1000, null=True, blank=True)
     # in future choice fields
-    status = models.CharField(max_length=1000, null=True, blank=True)
+    status = models.CharField(
+        max_length=1000, null=True, blank=True, choices=status_choice)
+    feedback = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -226,10 +241,16 @@ class orders(models.Model):
 class contact_data(models.Model):
     message = models.CharField(max_length=1000, blank=True, null=True)
 
+    class Meta:
+        verbose_name_plural = "Contact Data"
 
-# class primary_category(models.Model):
-#     name = models.CharField(max_length=1000, blank=True, null=True)
-#     prod_category = models.ManyToManyField('productCategory')
 
-#     def __str__(self):
-#         return self.name
+class primary_category(models.Model):
+    name = models.CharField(max_length=1000, blank=True, null=True)
+    prod_category = models.ManyToManyField('productCategory')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Primary Category"

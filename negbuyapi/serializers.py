@@ -50,17 +50,20 @@ class ProductSerializer(serializers.ModelSerializer):
             # 'product_images'
         ]
 
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = orders
         fields = [
-            'order_number', 
-            'user', 
+            'id',
+            'order_number',
+            'order_date',
+            'order_time',
+            'user',
             'product_info',
             'order_quantity',
             'shipping_date',
             'delivery_date',
             'status',
-            'created_at',
-            'modified_at'
+            'feedback'
         ]

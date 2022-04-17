@@ -968,13 +968,29 @@ def add_ports(request):
     })
 
 
-# Api to fetch order with status Running 
+# Api to fetch order with status Running
 @api_view(['POST'])
 def my_orders(request):
     user_id = request.headers['User-id']
-    running_orders = orders.objects.filter(status='running', user__id=user_id)
+    running_orders = orders.objects.filter(status='Running', user__id=user_id)
 
     order_serializer = OrderSerializer(running_orders, many=True)
+
+    return Response({
+        'status': 'success',
+        'message': 'Added ports',
+        'data': order_serializer.data
+    })
+
+
+# Api to fetch orders with status Completed
+@api_view(['POST'])
+def order_history(request):
+    user_id = request.headers['User-id']
+    completed_orders = orders.objects.filter(
+        status='Completed', user__id=user_id)
+
+    order_serializer = OrderSerializer(completed_orders, many=True)
 
     return Response({
         'status': 'success',

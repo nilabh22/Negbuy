@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/add_ports', views.add_ports, name="add_ports"),
 
     path('api/my_orders', views.my_orders, name="my_orders"),
+    path('api/order_history', views.order_history, name="order_history"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
