@@ -85,7 +85,8 @@ class product(models.Model):
         productCategory, on_delete=models.CASCADE, null=True)
     inventory_id = models.OneToOneField(
         productInventory, on_delete=models.CASCADE, null=True)
-    main_image = models.ImageField(upload_to='main_images', default=None, blank=True, null=True)
+    main_image = models.ImageField(
+        upload_to='main_images', default=None, blank=True, null=True)
     featured_products = models.BooleanField(default=False)
     best_selling_products = models.BooleanField(default=False)
     hot_selling_products = models.BooleanField(default=False)
@@ -130,7 +131,8 @@ class product(models.Model):
 
 
 class productImages(models.Model):
-    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='product_images' ,null=True)
+    product = models.ForeignKey(
+        product, on_delete=models.CASCADE, related_name='product_images', null=True)
     image = models.ImageField(
         upload_to='Product_images', default=None, blank=True)
 
@@ -142,9 +144,32 @@ class productImages(models.Model):
 
 
 class cart(models.Model):
-    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    order_number = models.PositiveIntegerField(null=True, blank=False)
+    buyer_info = models.ForeignKey(userDB, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    order_quantity = models.PositiveIntegerField(null=True, blank=True)
+    order_price = models.DecimalField(
+        null=True, blank=True, decimal_places=4, max_digits=12)
+    logistics_charges = models.DecimalField(
+        null=True, decimal_places=4, max_digits=12)
+    total_price = models.DecimalField(
+        null=True, blank=True, decimal_places=4, max_digits=12)
+    order_date = models.CharField(max_length=20, null=True, blank=True)
+    order_satus = models.CharField(max_length=1000, null=True, blank=True)
+    order_note = models.CharField(max_length=1000, null=True, blank=True)
+    billing_address = models.TextField(max_length=1000, null=True, blank=True)
+    billing_landmark = models.CharField(max_length=100)
+    billing_zipcode = models.CharField(max_length=100, null=True, blank=True)
+    billing_city = models.CharField(max_length=1000, null=True, blank=True)
+    billing_state = models.CharField(max_length=1000, null=True, blank=True)
+    billing_country = models.CharField(max_length=1000, null=True, blank=True)
+    shipping_adress = models.TextField(max_length=1000, null=True, blank=True)
+    shipping_landmark = models.CharField(
+        max_length=100, null=True, blank=True)
+    shipping_zipcode = models.CharField(max_length=100, null=True, blank=True)
+    shipping_city = models.CharField(max_length=1000, null=True, blank=True)
+    shipping_state = models.CharField(max_length=1000, null=True, blank=True)
+    shipping_country = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
         return self.user.user_id + " --> " + self.product.name + ": " + str(self.quantity)
@@ -168,10 +193,12 @@ class bankDetail(models.Model):
 
 class port(models.Model):
     name = models.CharField(max_length=1000, null=True, blank=True)
-    state = models.CharField(max_length=1000, null=True, blank=True)
+    country = models.CharField(max_length=1000, null=True, blank=True)
+    latitude = models.CharField(max_length=1000, null=True, blank=True)
+    longitude = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
-        return self.name + ', ' + self.state
+        return self.name
 
     class Meta:
         verbose_name_plural = "Port"
@@ -200,7 +227,7 @@ class contact_data(models.Model):
     message = models.CharField(max_length=1000, blank=True, null=True)
 
 
-# class product_category(models.Model):
+# class primary_category(models.Model):
 #     name = models.CharField(max_length=1000, blank=True, null=True)
 #     prod_category = models.ManyToManyField('productCategory')
 

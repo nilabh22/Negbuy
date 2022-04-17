@@ -41,7 +41,12 @@ urlpatterns = [
     path('api/product_detail', views.product_detail, name="product_detail"),
     path('api/best_selling', views.best_selling, name="best_selling_product"),
     path('api/hot_selling', views.hot_selling, name="hot_selling_product"),
-    path('api/categorized_product', views.categorized_product, name="product_category"),
+    path('api/categorized_product',
+         views.categorized_product, name="product_category"),
+    path('api/read_json', views.read_json, name="read_json"),
+    path('api/add_ports', views.add_ports, name="add_ports"),
+
+    path('api/my_orders', views.my_orders, name="my_orders"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

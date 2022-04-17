@@ -10,7 +10,10 @@ import datetime
 import os
 # import os.path
 from .contactus import contact_function
-from .serializers import ProductSerializer, ImageSerializer
+from .serializers import *
+import json
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils import get_column_letter
 
 
 @api_view(['POST'])
@@ -845,6 +848,136 @@ def categorized_product(request):
             'message': e,
             'data': ''
         })
+# =================================================================================#
+
+# new api of read file product_list.json.....
+
+
+@api_view(['GET'])
+def read_json(request):
+    with open('product_lists.json', 'r') as f:
+        jsondata = f.read()
+
+        obj = json.loads(jsondata)
+        for pd in obj:
+            id = str(pd['id'])
+            name = str(pd['name'])
+            sku = str(pd['sku'])
+            category_id = str(pd['category'])
+            inventory_id = str(pd['inventory'])
+            featured_products = str(pd['featured_products'])
+            fast_dispatch = str(pd['fast_dispatch'])
+            ready_to_ship = str(pd['ready_to_ship'])
+            customized_product = str(pd['customized_product'])
+            brand = str(pd['brand'])
+            keyword = str(pd['keyword'])
+            color = str(pd['color'])
+            size = str(pd['size'])
+            details = str(pd['details'])
+            price_choice = str(pd['price_choice'])
+            price = str(pd['price'])
+            mrp = str(pd['mrp'])
+            sale_price = str(pd['sale_price'])
+            sale_startdate = str(pd['sale_startdate'])
+            sale_enddate = str(pd['sale_enddate'])
+            manufacturing_time = str(pd['manufacturing_time'])
+            quantity_price = str(pd['quantity_price'])
+            maximum_order_quantity = str(pd['maximum_order_quantity'])
+            weight = str(pd['weight'])
+            transportation_port = str(pd['transportation_port'])
+            packing_details = str(pd['packing_details'])
+            packing_address = str(pd['packing_address'])
+            status = str(pd['status'])
+            created_at = str(pd['created_at'])
+            modified_at = str(pd['modified_at'])
+            deleted_at = str(pd['deleted_at'])
+
+            product.objects.create(
+                # id=id,
+                # user='Rahul',
+                name=name,
+                sku=sku,
+                # category_id=category_id,
+                # inventory_id=13,
+                featured_products=featured_products,
+                fast_dispatch=fast_dispatch,
+                ready_to_ship=ready_to_ship,
+                customized_product=customized_product,
+                brand=brand,
+                keyword=keyword,
+                color=color,
+                size=size,
+                details=details,
+                price_choice=price_choice,
+                price=price,
+                mrp=mrp,
+                sale_price=sale_price,
+                sale_startdate=sale_startdate,
+                sale_enddate=sale_enddate,
+                manufacturing_time=manufacturing_time,
+                quantity_price=quantity_price,
+                maximum_order_quantity=maximum_order_quantity,
+                weight=weight,
+                transportation_port=transportation_port,
+                packing_details=packing_details,
+                packing_address=packing_address,
+                status=status,
+                created_at=created_at,
+                modified_at=modified_at,
+                deleted_at=deleted_at
+            )
+            continue
+
+    return Response({
+        'status': 'success',
+        'message': 'Added products',
+        'data': obj
+    })
 
 
 # ---------------------------- Seller.Negbuy -------------------------------------- #
+
+# Funtion to Read and add Port Details from XLSX
+@api_view(['POST'])
+def add_ports(request):
+    line_no = int(request.data['line_no'])
+    wb = load_workbook('portdata.xlsx')
+    ws = wb.active
+
+    for row in range(2, line_no+1):
+        for col in range(1, 5):
+            char = get_column_letter(col)
+            print(ws[char+str(row)].value)
+
+            country = ws[char+str(row)].value
+            portname = ws[get_column_letter(col+1)+str(row)].value
+            lat = ws[get_column_letter(col+2)+str(row)].value
+            lon = ws[get_column_letter(col+3)+str(row)].value
+
+            port.objects.create(
+                name=portname,
+                country=country,
+                latitude=lat,
+                longitude=lon
+            )
+            break
+
+    return Response({
+        'status': 'success',
+        'message': 'Added ports',
+    })
+
+
+# Api to fetch order with status Running 
+@api_view(['POST'])
+def my_orders(request):
+    user_id = request.headers['User-id']
+    running_orders = orders.objects.filter(status='running', user__id=user_id)
+
+    order_serializer = OrderSerializer(running_orders, many=True)
+
+    return Response({
+        'status': 'success',
+        'message': 'Added ports',
+        'data': order_serializer.data
+    })
