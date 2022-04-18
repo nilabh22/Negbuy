@@ -851,20 +851,29 @@ def categorized_product(request):
 # =================================================================================#
 
 # new api of read file product_list.json.....
-
+import random
 
 @api_view(['GET'])
 def read_json(request):
+    #remove on live version
+    #all_products = productCategory.objects.all().delete()
+    #all_inventory = productInventory.objects.all().delete()
+    user_data_all = userDB.objects.all()
+    category_data = productCategory.objects.all()
+
     with open('product_lists.json', 'r') as f:
         jsondata = f.read()
-
         obj = json.loads(jsondata)
         for pd in obj:
-            id = str(pd['id'])
+            
+            inventory_data = productInventory.objects.create(quantity=20)
+            inventory_data.save()
+
+            user_data = random.choice(user_data_all)
+            category_obj = random.choice(category_data)
+            inventory_obj = inventory_data
             name = str(pd['name'])
             sku = str(pd['sku'])
-            category_id = str(pd['category'])
-            inventory_id = str(pd['inventory'])
             featured_products = str(pd['featured_products'])
             fast_dispatch = str(pd['fast_dispatch'])
             ready_to_ship = str(pd['ready_to_ship'])
@@ -893,12 +902,11 @@ def read_json(request):
             deleted_at = str(pd['deleted_at'])
 
             product.objects.create(
-                # id=id,
-                # user='Rahul',
+                user=user_data,
                 name=name,
                 sku=sku,
-                # category_id=category_id,
-                # inventory_id=13,
+                category_id=category_obj,
+                inventory_id=inventory_obj,
                 featured_products=featured_products,
                 fast_dispatch=fast_dispatch,
                 ready_to_ship=ready_to_ship,
@@ -926,7 +934,6 @@ def read_json(request):
                 modified_at=modified_at,
                 deleted_at=deleted_at
             )
-            continue
 
     return Response({
         'status': 'success',
