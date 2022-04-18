@@ -67,3 +67,14 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'feedback'
         ]
+
+
+class PortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = port
+        fields = [
+            'name',
+            'country',
+            'latitude',
+            'longitude'
+        ]

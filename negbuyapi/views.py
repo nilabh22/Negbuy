@@ -125,7 +125,7 @@ def seller_signup(request):
 
 
 def addProduct(request, user):
-    price_choice = request.data['price_choice'].lower()
+    price_choice = request.data['price_choice']
 
     category = request.data['category']
     try:
@@ -133,7 +133,7 @@ def addProduct(request, user):
     except:
         category_record = productCategory.objects.create(name=category)
 
-    if price_choice == 'add price':
+    if price_choice == 'Add Price':
         product_record = product.objects.create(
             user=user,
             name=request.data['name'],
@@ -162,7 +162,7 @@ def addProduct(request, user):
         for image in images:
             productImages.objects.create(product=product_record, image=image)
 
-    elif price_choice == 'price according to quantity':
+    elif price_choice == 'Price according to quantity':
         product_record = product.objects.create(
             user=user,
             name=request.data['name'],
@@ -603,11 +603,13 @@ def getPort(port):
 
 @api_view(['GET'])
 def get_ports(request):
-    response = []
     all_ports = port.objects.all()
-    for each_port in all_ports:
-        response.append(getPort(each_port))
-    return Response(response, status=200)
+    port_serializer = PortSerializer(all_ports, many=True)
+    return Response({
+        'status': True,
+        'message': 'Success',
+        'data': port_serializer.data
+    })
 
 
 @api_view(['GET'])

@@ -227,7 +227,7 @@ class orders(models.Model):
     # in future choice fields
     status = models.CharField(
         max_length=1000, null=True, blank=True, choices=status_choice)
-    feedback = models.CharField(max_length=1000, null=True, blank=True)
+    feedback = models.TextField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
