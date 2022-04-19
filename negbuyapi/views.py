@@ -133,7 +133,7 @@ def addProduct(request, user):
     except:
         category_record = productCategory.objects.create(name=category)
 
-    if price_choice == 'add price':
+    if price_choice == 'Add Price':
         product_record = product.objects.create(
             user=user,
             name=request.data['name'],
@@ -162,7 +162,7 @@ def addProduct(request, user):
         for image in images:
             productImages.objects.create(product=product_record, image=image)
 
-    elif price_choice == 'price according to quantity':
+    elif price_choice == 'Price according to quantity':
         product_record = product.objects.create(
             user=user,
             name=request.data['name'],
@@ -861,6 +861,7 @@ def read_json(request):
     user_data_all = userDB.objects.all()
     category_data = productCategory.objects.all()
 
+    bool_list = ['True','False']
     with open('product_lists.json', 'r') as f:
         jsondata = f.read()
         obj = json.loads(jsondata)
@@ -874,10 +875,10 @@ def read_json(request):
             inventory_obj = inventory_data
             name = str(pd['name'])
             sku = str(pd['sku'])
-            featured_products = str(pd['featured_products'])
-            fast_dispatch = str(pd['fast_dispatch'])
-            ready_to_ship = str(pd['ready_to_ship'])
-            customized_product = str(pd['customized_product'])
+            featured_products = random.choice(bool_list)
+            fast_dispatch = random.choice(bool_list)
+            ready_to_ship = random.choice(bool_list)
+            customized_product = random.choice(bool_list)
             brand = str(pd['brand'])
             keyword = str(pd['keyword'])
             color = str(pd['color'])
