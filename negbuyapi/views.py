@@ -856,12 +856,12 @@ import random
 @api_view(['GET'])
 def read_json(request):
     #remove on live version
-    #all_products = productCategory.objects.all().delete()
+    all_products = product.objects.all().delete()
     #all_inventory = productInventory.objects.all().delete()
     user_data_all = userDB.objects.all()
     category_data = productCategory.objects.all()
 
-    bool_list = ['True','False']
+    bool_list = [True,False]
     with open('product_lists.json', 'r') as f:
         jsondata = f.read()
         obj = json.loads(jsondata)
