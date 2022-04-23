@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import timezone
+import uuid
 
 
 class userDB(models.Model):
@@ -11,7 +12,7 @@ class userDB(models.Model):
     user_id = models.CharField(max_length=100, null=True, blank=True)
     username = models.CharField(
         max_length=100, unique=True, null=True, blank=True)
-    password = models.TextField(null=True, blank=True)
+    password = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=100, null=True, blank=True)
@@ -34,10 +35,10 @@ class userDB(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"{self.user_id} | {self.phone}"
+        return f"{self.username}   |   {self.phone}"
 
     class Meta:
-        verbose_name_plural = "User"
+        verbose_name_plural = "Users"
 
 
 class productCategory(models.Model):
@@ -61,7 +62,7 @@ class productInventory(models.Model):
     deleted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "Inventory: " + str(self.id) + " - Capacity: " + str(self.quantity)
+        return "Inventory: " + str(self.id) + " --- Capacity: " + str(self.quantity)
 
     class Meta:
         verbose_name_plural = "Inventory"
@@ -128,7 +129,7 @@ class product(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Product"
+        verbose_name_plural = "Products"
 
 
 class productImages(models.Model):
@@ -141,7 +142,7 @@ class productImages(models.Model):
         return self.product.name + "--> " + str(self.image)[15:]
 
     class Meta:
-        verbose_name_plural = "Product Image"
+        verbose_name_plural = "Product Images"
 
 
 class cart(models.Model):
@@ -228,6 +229,7 @@ class orders(models.Model):
     status = models.CharField(
         max_length=1000, null=True, blank=True, choices=status_choice)
     feedback = models.TextField(max_length=1000, null=True, blank=True)
+    order_note = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     modified_at = models.DateTimeField(auto_now=True, null=True)
 

@@ -48,6 +48,10 @@ urlpatterns = [
 
     path('api/my_orders', views.my_orders, name="my_orders"),
     path('api/order_history', views.order_history, name="order_history"),
+    path('api/order_note', views.order_note, name="order_note"),
+    path('api/order_details', views.order_details, name="order_details"),
+    path('api/read_csv', views.read_csv, name="read_csv"),
+    path('api/port_distance', views.port_distance, name="port_distance"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

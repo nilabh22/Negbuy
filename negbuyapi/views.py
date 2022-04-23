@@ -1,3 +1,5 @@
+import geopy.distance
+import csv
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Q
@@ -139,6 +141,7 @@ def addProduct(request, user):
             name=request.data['name'],
             category_id=category_record,
             brand=request.data['brand'],
+            main_image=request.data['main_image'],
             keyword=request.data['keywords'],
             color=request.data['colors'],
             size=request.data['size'],
@@ -156,6 +159,7 @@ def addProduct(request, user):
             transportation_port=request.data['transportation_port'],
             packing_details=request.data['packing_details'],
             packing_address=request.data['packing_address']
+
         )
         product_record.save()
         images = dict((request.data).lists())['image']
@@ -167,6 +171,8 @@ def addProduct(request, user):
             user=user,
             name=request.data['name'],
             category_id=category_record,
+            brand=request.data['brand'],
+            main_image=request.data['main_image'],
             keyword=request.data['keywords'],
             color=request.data['colors'],
             size=request.data['size'],
@@ -178,6 +184,7 @@ def addProduct(request, user):
             transportation_port=request.data['transportation_port'],
             packing_details=request.data['packing_details'],
             packing_address=request.data['packing_address']
+
         )
         product_record.save()
         images = dict((request.data).lists())['image']
@@ -595,12 +602,6 @@ def search_category(request):
         })
 
 
-def getPort(port):
-    name = port.name
-    state = port.state
-    return name + ',' + state
-
-
 @api_view(['GET'])
 def get_ports(request):
     all_ports = port.objects.all()
@@ -620,6 +621,12 @@ def get_categories(request):
         # path = "/Users/habibahmed/Desktop/NegBuy/negbuy/static/categories"
         dir_list = os.listdir(path)
         mylst = map(lambda each: each.strip(".txt"), dir_list)
+
+        # for item in mylst:
+        #     productCategory.objects.create(
+        #         name=item,
+        #         desc="Lorem Ipsum"
+        #     )
 
         return Response({
             'status': True,
@@ -852,25 +859,39 @@ def categorized_product(request):
         })
 # =================================================================================#
 
+
 # new api of read file product_list.json.....
 
 
 @api_view(['GET'])
 def read_json(request):
+    # remove on live version
+    # all_products = productCategory.objects.all().delete()
+    # all_inventory = productInventory.objects.all().delete()
+    user_data_all = userDB.objects.all()
+    category_data = productCategory.objects.all()
+
+    bool_list = [True, False]
     with open('product_lists.json', 'r') as f:
         jsondata = f.read()
-
         obj = json.loads(jsondata)
         for pd in obj:
-            id = str(pd['id'])
+
+            inventory_data = productInventory.objects.create(quantity=20)
+            inventory_data.save()
+
+            user_data = random.choice(user_data_all)
+            category_obj = random.choice(category_data)
+            inventory_obj = inventory_data
             name = str(pd['name'])
             sku = str(pd['sku'])
-            category_id = str(pd['category'])
-            inventory_id = str(pd['inventory'])
-            featured_products = str(pd['featured_products'])
-            fast_dispatch = str(pd['fast_dispatch'])
-            ready_to_ship = str(pd['ready_to_ship'])
-            customized_product = str(pd['customized_product'])
+            main_image = str(pd['main_image'])
+            hot_selling_products = random.choice(bool_list)
+            best_selling_products = random.choice(bool_list)
+            featured_products = random.choice(bool_list)
+            fast_dispatch = random.choice(bool_list)
+            ready_to_ship = random.choice(bool_list)
+            customized_product = random.choice(bool_list)
             brand = str(pd['brand'])
             keyword = str(pd['keyword'])
             color = str(pd['color'])
@@ -895,12 +916,14 @@ def read_json(request):
             deleted_at = str(pd['deleted_at'])
 
             product.objects.create(
-                # id=id,
-                # user='Rahul',
+                user=user_data,
                 name=name,
                 sku=sku,
-                # category_id=category_id,
-                # inventory_id=13,
+                main_image=main_image,
+                category_id=category_obj,
+                inventory_id=inventory_obj,
+                hot_selling_products=hot_selling_products,
+                best_selling_products=best_selling_products,
                 featured_products=featured_products,
                 fast_dispatch=fast_dispatch,
                 ready_to_ship=ready_to_ship,
@@ -928,7 +951,6 @@ def read_json(request):
                 modified_at=modified_at,
                 deleted_at=deleted_at
             )
-            continue
 
     return Response({
         'status': 'success',
@@ -942,11 +964,12 @@ def read_json(request):
 # Funtion to Read and add Port Details from XLSX
 @api_view(['POST'])
 def add_ports(request):
-    line_no = int(request.data['line_no'])
+    start_line = int(request.data['start_line'])
+    end_line = int(request.data['end_line'])
     wb = load_workbook('portdata.xlsx')
     ws = wb.active
 
-    for row in range(2, line_no+1):
+    for row in range(start_line, end_line+1):
         for col in range(1, 5):
             char = get_column_letter(col)
             print(ws[char+str(row)].value)
@@ -998,4 +1021,92 @@ def order_history(request):
         'status': 'success',
         'message': 'Added ports',
         'data': order_serializer.data
+    })
+
+
+@api_view(['POST'])
+def order_note(request):
+    user_id = request.headers['User-id']
+    order_id = request.data['order_id']
+    note = request.data['note']
+
+    order_obj = orders.objects.get(order_id=order_id)
+    order_obj.order_note = note
+    order_obj.save()
+
+    return Response({
+        'status': 'success',
+        'message': 'Added ports',
+        'data': "Success"
+    })
+
+
+@api_view(['GET'])
+def order_details(request):
+    user_id = request.headers['User-id']
+    order_id = request.data['order_id']
+
+    order = orders.objects.filter(id=order_id).values()
+    order_item = orders.objects.get(id=order_id)
+    product_detail = product.objects.filter(
+        name=order_item.product_info).values()
+    user_detail = userDB.objects.filter(user_id=user_id)
+
+    order_serialized = OrderSerializer(order, many=True)
+    product_serialized = ProductSerializer(product_detail, many=True)
+    user_serialized = UserSerializer(user_detail, many=True)
+
+    quantity = 0
+    price = 0
+    # Price calc
+    for item in order:
+        quantity = int(item['order_quantity'])
+
+    for item in product_detail:
+        price = item['price']
+
+    cart_total = quantity * price
+
+    return Response({
+        'status': 'success',
+        'message': 'Order Details',
+        'Product Details': product_serialized.data,
+        'Order Details': order_serialized.data,
+        'Customer Details': user_serialized.data,
+        'Price Details': cart_total
+    })
+
+
+# Image uploading of Products from CSV file
+@api_view(['GET'])
+def read_csv(request):
+    with open('images.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        for a in csv_reader:
+            if product.objects.filter(name=a[0]).exists():
+                product_object = product.objects.get(name=a[0])
+                productImages.objects.create(
+                    product=product_object,
+                    image=a[1]
+                )
+    return Response({
+        'status': 'success'
+    })
+
+
+# Distance between Longitude and latitude
+@api_view(['GET'])
+def port_distance(request):
+    a_lat = float(request.data['a_lat'])
+    a_lon = float(request.data['a_lon'])
+    b_lat = float(request.data['b_lat'])
+    b_lon = float(request.data['b_lon'])
+    coords_1 = (a_lat, a_lon)
+    coords_2 = (b_lat, b_lon)
+
+    distance = geopy.distance.geodesic(coords_1, coords_2).km
+    return Response({
+        'status': 'success',
+        'message': 'Order Details',
+        'distance': distance
     })
