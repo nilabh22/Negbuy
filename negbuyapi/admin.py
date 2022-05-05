@@ -2,16 +2,12 @@ from django.contrib import admin
 from .models import *
 
 
-class readIdField(admin.ModelAdmin):
-    readonly_fields = ('id',)
-
-
-class readFields(admin.ModelAdmin):
-    readonly_fields = ('id', 'created_at', 'modified_at', 'deleted_at')
-
-
 class productFields(admin.ModelAdmin):
     list_display = ('name', 'brand')
+
+
+class categoryFields(admin.ModelAdmin):
+    list_display = ('name', 'id')
 
 
 class cartFields(admin.ModelAdmin):
@@ -23,19 +19,23 @@ class portFields(admin.ModelAdmin):
 
 
 class orderFields(admin.ModelAdmin):
-    list_display = ('order_number', 'status', 'order_date')
+    list_display = ('id', 'order_number', 'status', 'order_date')
 
 
 class bankFields(admin.ModelAdmin):
     list_display = ('accountName', 'accountNumber', 'accountIfsc')
 
 
-admin.site.register(productCategory, readFields)
-admin.site.register(productInventory, readFields)
+class userFields(admin.ModelAdmin):
+    list_display = ('seller_name', 'id', 'phone', 'role')
+
+
+admin.site.register(productCategory, categoryFields)
+admin.site.register(productInventory)
 # admin.site.register(paymentTermFields, readIdField)
 admin.site.register(product, productFields)
 admin.site.register(productImages)
-admin.site.register(userDB, readIdField)
+admin.site.register(userDB, userFields)
 admin.site.register(cart, cartFields)
 admin.site.register(bankDetail, bankFields)
 admin.site.register(port, portFields)

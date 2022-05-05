@@ -44,9 +44,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'packing_details',
             'packing_address',
             'status',
-            'created_at',
-            'modified_at',
-            'deleted_at',
+            # 'created_at',
+            # 'modified_at',
+            # 'deleted_at',
             # 'product_images'
         ]
 
@@ -55,15 +55,34 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = orders
         fields = [
-            'id',
-            'order_number',
-            'order_date',
             'order_time',
-            'user',
-            'product_info',
             'order_quantity',
             'shipping_date',
             'delivery_date',
             'status',
-            'feedback'
+            'feedback',
+            'order_note'
+        ]
+
+
+class PortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = port
+        fields = [
+            'name',
+            'country',
+            'latitude',
+            'longitude'
+        ]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = userDB
+        fields = [
+            'user_id',
+            'username',
+            'first_name',
+            'phone',
+            'email',
         ]
