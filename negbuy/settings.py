@@ -26,7 +26,7 @@ SECRET_KEY = '53fyu0h8v^12!ck0pwptt&jx3e)c)q^ku7i*q*hz+c0j+6h1i^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','api.negbuy.com','www.api.negbuy.com']
 # ALLOWED_HOSTS = ['api.negbuy.com']
 
 
@@ -94,7 +94,6 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'access-control-allow-origin',
     'access-control-allow-headers',
-    'User-id',
 ]
 
 # Database
