@@ -27,7 +27,7 @@ class bankFields(admin.ModelAdmin):
 
 
 class userFields(admin.ModelAdmin):
-    list_display = ('username', 'id', 'phone', 'role')
+    list_display = ('seller_name', 'id', 'phone', 'role')
 
 
 admin.site.register(productCategory, categoryFields)

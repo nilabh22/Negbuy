@@ -35,7 +35,7 @@ class userDB(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"{self.username}   |   {self.phone}"
+        return f"{self.seller_name}   |   {self.phone}"
 
     class Meta:
         verbose_name_plural = "Users"

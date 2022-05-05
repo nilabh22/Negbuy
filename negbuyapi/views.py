@@ -1,3 +1,5 @@
+import threading
+import re
 import geopy.distance
 import csv
 from rest_framework.decorators import api_view
@@ -7,7 +9,7 @@ from drf_api_logger import API_LOGGER_SIGNAL
 from .models import *
 import random
 import requests
-import bs4
+# import bs4sta
 import datetime
 import os
 # import os.path
@@ -744,11 +746,15 @@ def product_detail(request):
                 if key == 'image':
                     image_list.append(dic[key])
 
+        data_dict = {
+            'product details': serializer.data,
+            'images': image_list
+        }
+
         return Response({
             'status': True,
             'message': 'Success',
-            'data': serializer.data,
-            'images': image_list
+            'data': data_dict
         })
 
     except Exception as e:
@@ -961,6 +967,25 @@ def read_json(request):
 
 # ---------------------------- Seller.Negbuy -------------------------------------- #
 
+# =========== DMS to DEC ============ #
+
+def dms2dec(dms_str):
+
+    dms_str = re.sub(r'\s', '', dms_str)
+
+    sign = -1 if re.search('[swSW]', dms_str) else 1
+
+    numbers = [*filter(len, re.split('\D+', dms_str, maxsplit=4))]
+
+    degree = numbers[0]
+    minute = numbers[1] if len(numbers) >= 2 else '0'
+    second = numbers[2] if len(numbers) >= 3 else '0'
+    frac_seconds = numbers[3] if len(numbers) >= 4 else '0'
+
+    second += "." + frac_seconds
+    return sign * (int(degree) + float(minute) / 60 + float(second) / 3600)
+
+
 # Funtion to Read and add Port Details from XLSX
 @api_view(['POST'])
 def add_ports(request):
@@ -972,18 +997,22 @@ def add_ports(request):
     for row in range(start_line, end_line+1):
         for col in range(1, 5):
             char = get_column_letter(col)
-            print(ws[char+str(row)].value)
+            # print(ws[char+str(row)].value)
 
             country = ws[char+str(row)].value
             portname = ws[get_column_letter(col+1)+str(row)].value
             lat = ws[get_column_letter(col+2)+str(row)].value
             lon = ws[get_column_letter(col+3)+str(row)].value
-
+            try:
+                dec_lat = dms2dec(lat)
+                dec_lon = dms2dec(lon)
+            except Exception as e:
+                print(e)
             port.objects.create(
                 name=portname,
                 country=country,
-                latitude=lat,
-                longitude=lon
+                latitude=dec_lat,
+                longitude=dec_lon
             )
             break
 
@@ -1023,9 +1052,12 @@ def order_history(request):
         'data': order_serializer.data
     })
 
+# Add order Note to a particular order
+
 
 @api_view(['POST'])
 def order_note(request):
+
     user_id = request.headers['User-id']
     order_id = request.data['order_id']
     note = request.data['note']
@@ -1039,6 +1071,8 @@ def order_note(request):
         'message': 'Added ports',
         'data': "Success"
     })
+
+# Get order Details
 
 
 @api_view(['GET'])
@@ -1067,13 +1101,17 @@ def order_details(request):
 
     cart_total = quantity * price
 
-    return Response({
-        'status': 'success',
-        'message': 'Order Details',
+    data_dict = {
         'Product Details': product_serialized.data,
         'Order Details': order_serialized.data,
         'Customer Details': user_serialized.data,
         'Price Details': cart_total
+    }
+
+    return Response({
+        'status': 'success',
+        'message': 'Order Details',
+        'data': data_dict
     })
 
 
@@ -1099,14 +1137,28 @@ def read_csv(request):
 def port_distance(request):
     a_lat = float(request.data['a_lat'])
     a_lon = float(request.data['a_lon'])
-    b_lat = float(request.data['b_lat'])
-    b_lon = float(request.data['b_lon'])
+    country = request.data['country']
+    dist = 0
+    cl_port = ''
     coords_1 = (a_lat, a_lon)
-    coords_2 = (b_lat, b_lon)
+    qs = port.objects.filter(country=country).values()
+    for item in qs:
+        # print(qs)
+        for i in item:
+            latitude_val = item['latitude']
+            longitude_val = item['longitude']
+            coords_2 = (latitude_val, longitude_val)
+            distance = geopy.distance.geodesic(coords_1, coords_2).km
+            if dist < distance:
+                dist = distance
+                cl_port = item['name']
+                data_dict = {
+                    'Distance': dist,
+                    'port': cl_port
+                }
 
-    distance = geopy.distance.geodesic(coords_1, coords_2).km
     return Response({
         'status': 'success',
         'message': 'Order Details',
-        'distance': distance
+        'data': data_dict
     })
