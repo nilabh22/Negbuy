@@ -50,6 +50,7 @@ urlpatterns = [
     path('api/order_history', views.order_history, name="order_history"),
 
     path('api/read_csv', views.read_csv),
+#     path('api/bsoup', views.bsoup),
 
 #     path('api/product_fetch', views.product_fetch),
 

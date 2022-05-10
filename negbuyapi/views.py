@@ -944,11 +944,11 @@ def read_json(request):
 
 # ---------------------------- Seller.Negbuy -------------------------------------- #
 
-# Funtion to Read and add Port Details from XLSX
+# Function to Read and add Port Details from XLSX
 @api_view(['POST'])
 def add_ports(request):
     line_no = int(request.data['line_no'])
-    wb = load_workbook('portdata.xlsx')
+    wb = load_workbook('Ports_Data.xlsx')
     ws = wb.active
 
     for row in range(2, line_no+1):
@@ -1023,4 +1023,48 @@ def read_csv(request):
         'status': 'success'
     })
 
+# create api for web-scraping and save the data in excel
+# from bs4 import BeautifulSoup
+# import requests
 
+# @api_view(['GET'])
+# def bsoup(request):
+
+#     this function is open excel file 
+#     wb = load_workbook('new.xlsx')
+#     ws = wb.active
+ 
+#     for row in range(1030, 1038):
+#         for col in range(1, 2):
+#             char = get_column_letter(col)
+#             print(ws[char+str(row)].value)
+#             port = ws[char+str(row)].value
+#             port= port.replace(" ", "_")
+
+#             source = requests.get('https://www.searates.com/port/'+port+'_ye').text
+
+# this function is web scraping only one data....
+#             soup = BeautifulSoup(source,'lxml')
+#             summary= soup.find('table', class_='table table-bordered')
+#             counter = 0
+#             latitude = ""
+#             longtitude = ""
+#             for i in summary.find_all('td'):
+#                 counter+=1
+#                 if counter == 14:
+#                     latitude = i.get_text()
+#                     print(latitude)
+#                 elif counter == 16:
+#                     longtitude = i.get_text()
+#                     print(longtitude)
+
+# this function is save the data excel
+#                 lat = ws[get_column_letter(col+1)+str(row)]
+#                 lat.value = latitude
+#                 long = ws[get_column_letter(col+2)+str(row)]
+#                 long.value = longtitude
+#                 wb.save('new.xlsx')
+
+#     return Response({
+#         'status': 'success'
+#     })
