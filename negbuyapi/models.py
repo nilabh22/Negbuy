@@ -254,3 +254,33 @@ class primary_category(models.Model):
 
     class Meta:
         verbose_name_plural = "Primary Category"
+
+
+class rfq_db(models.Model):
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    required =models.CharField(max_length=1000, blank=True, null=True)
+    date = models.DateTimeField(auto_now=True, null=True)
+    target_price = models.IntegerField( blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user.first_name) + str(self.user.last_name)
+
+    class Meta:
+        verbose_name_plural = "RFQ_db"
+
+
+class buyer_questions(models.Model):
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    product =  models.ForeignKey(product, on_delete=models.CASCADE, null=True)
+    question =models.CharField(max_length=1000, blank=True, null=True)
+    feedback= models.TextField(max_length=1000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.question
+        # return str(self.user.first_name) + str(self.user.last_name)
+
+    class Meta:
+        verbose_name_plural = "Buyer_Questions"

@@ -1023,6 +1023,72 @@ def read_csv(request):
         'status': 'success'
     })
 
+
+@api_view(['POST'])
+def api_RFQ(request):
+    user_id = request.headers['User-id']
+    required = request.data['required']
+    target_price = request.data['target_price']
+    try:
+        user_obj= userDB.objects.get(user_id=user_id)
+        rfq_db.objects.create(
+            user= user_obj,
+            required= required,
+            target_price= target_price
+        )
+        data_dict= {
+            'user': user_id,
+            'required': required,
+            'target_price': target_price
+        }
+        return Response({
+            'status': True,
+            'message': 'Success',
+            'data' : data_dict
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+        })
+
+@api_view(['GET'])
+def api_buyer_questions(request):
+    user_id = request.headers['User-id']
+    product_id = request.data['product_id']
+    question = request.data['question']
+    feedback = request.data['feedback']
+    try:
+        user_obj= userDB.objects.get(user_id=user_id)
+        product_obj= product.objects.get(id=product_id)
+        buyer_questions.objects.create(
+            user= user_obj,
+            product= product_obj, 
+            question= question,
+            # feedback= feedback
+        )
+        data_dict= {
+            # 'user': user,
+            # 'product': product,
+            'question': question,
+            'feedback':'' 
+        }
+        return Response({
+            'status': True,
+            'message': 'Success',
+            'data' : data_dict
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+        })
+
+
+
+
 # create api for web-scraping and save the data in excel
 # from bs4 import BeautifulSoup
 # import requests

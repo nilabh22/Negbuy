@@ -11,7 +11,7 @@ class readFields(admin.ModelAdmin):
 
 
 class productFields(admin.ModelAdmin):
-    list_display = ('name', 'brand')
+    list_display = ('id','name', 'brand')
 
 
 class cartFields(admin.ModelAdmin):
@@ -42,3 +42,7 @@ admin.site.register(port, portFields)
 admin.site.register(orders, orderFields)
 admin.site.register(contact_data)
 admin.site.register(primary_category)
+admin.site.register(rfq_db)
+admin.site.register(buyer_questions)
+
+
