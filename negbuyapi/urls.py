@@ -52,10 +52,9 @@ urlpatterns = [
     path('api/read_csv', views.read_csv),
     path('api/rfq_db', views.api_RFQ),
     path('api/buyer_questions',views.api_buyer_questions),
+    path('api/indiaport_api', views.indiaport_api),
 
-#     path('api/bsoup', views.bsoup),
-
-#     path('api/product_fetch', views.product_fetch),
+    path('api/size_api', views.size_api),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

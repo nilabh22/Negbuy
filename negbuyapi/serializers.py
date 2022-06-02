@@ -67,3 +67,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'feedback'
         ]
+# class ProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = product
+#         fields = '__all__'

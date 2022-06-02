@@ -14,7 +14,7 @@ from .serializers import *
 import json
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
-
+import openpyxl
 
 @api_view(['POST'])
 def login(request):
@@ -861,7 +861,7 @@ def read_json(request):
     user_data_all = userDB.objects.all()
     category_data = productCategory.objects.all()
 
-    with open('products_list.json', 'r') as f:
+    with open('new_products.json', 'r') as f:
         jsondata = f.read()
         obj = json.loads(jsondata)
         for pd in obj:
@@ -948,7 +948,7 @@ def read_json(request):
 @api_view(['POST'])
 def add_ports(request):
     line_no = int(request.data['line_no'])
-    wb = load_workbook('Ports_Data.xlsx')
+    wb = load_workbook('Ports Data.xlsx')
     ws = wb.active
 
     for row in range(2, line_no+1):
@@ -1087,7 +1087,65 @@ def api_buyer_questions(request):
         })
 
 
+@api_view(['GET'])
+def size_api(request):
+    user_id = request.headers['User-id']
+    workbook = openpyxl.load_workbook('Dropdown_list.xlsx')
+    ws = workbook['Sheet1']
 
+    items = []
+    a=[]
+    for row in ws.iter_rows(1, ):
+        row_cells=[]
+        for cell in row:
+            row_cells.append(cell.value)
+        items.append(tuple(row_cells))
+
+    for i in range(1, len(items)):
+        s=items[i][1]
+        a.append(s)
+
+    return Response({
+         'status': True,
+         'message': 'Success',
+         'data' : a
+     })
+
+# @api_view(['GET'])
+# def indiaport_api(request):
+    # country_name = str(request.data['country_name'])
+    # wb = openpyxl.load_workbook('Ports Data.xlsx')
+    # ws = wb['Ports']
+# 
+    # sheet_cells = []
+    # for row in ws.iter_rows(1, ):
+        # row_cells=[]
+        # for cell in row:
+            # row_cells.append(cell.value)
+        # sheet_cells.append(tuple(row_cells))
+# 
+    # for i in range(2308, len(sheet_cells)):
+        # data_dict= {
+            # sheet_cells[i]
+        # }
+# 
+    # return Response({
+        # 'status': 'success',
+        # 'message': 'ports',
+        # 'data': data_dict ,
+        # })
+# 
+
+# @api_view(['GET'])
+# def product_api(request):
+#     a= product.objects.all()
+#     product_serialized = ProductSerializer(a, many=True)
+
+#     return Response({
+#         'status': True,
+#         'message': 'Success',
+#         'data': product_serialized.data
+#     })
 
 # create api for web-scraping and save the data in excel
 # from bs4 import BeautifulSoup
@@ -1095,8 +1153,6 @@ def api_buyer_questions(request):
 
 # @api_view(['GET'])
 # def bsoup(request):
-
-#     this function is open excel file 
 #     wb = load_workbook('new.xlsx')
 #     ws = wb.active
  
@@ -1106,15 +1162,15 @@ def api_buyer_questions(request):
 #             print(ws[char+str(row)].value)
 #             port = ws[char+str(row)].value
 #             port= port.replace(" ", "_")
-
 #             source = requests.get('https://www.searates.com/port/'+port+'_ye').text
 
-# this function is web scraping only one data....
+
 #             soup = BeautifulSoup(source,'lxml')
 #             summary= soup.find('table', class_='table table-bordered')
 #             counter = 0
 #             latitude = ""
 #             longtitude = ""
+            
 #             for i in summary.find_all('td'):
 #                 counter+=1
 #                 if counter == 14:
@@ -1124,13 +1180,11 @@ def api_buyer_questions(request):
 #                     longtitude = i.get_text()
 #                     print(longtitude)
 
-# this function is save the data excel
 #                 lat = ws[get_column_letter(col+1)+str(row)]
 #                 lat.value = latitude
 #                 long = ws[get_column_letter(col+2)+str(row)]
 #                 long.value = longtitude
 #                 wb.save('new.xlsx')
-
-#     return Response({
-#         'status': 'success'
-#     })
+#         return Response({
+#             'status': 'success'
+#             })
