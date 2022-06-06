@@ -52,7 +52,7 @@ urlpatterns = [
     path('api/read_csv', views.read_csv),
     path('api/rfq_db', views.api_RFQ),
     path('api/buyer_questions',views.api_buyer_questions),
-    path('api/indiaport_api', views.indiaport_api),
+    path('api/db_rfq', views.db_rfq),
 
     path('api/size_api', views.size_api),
 

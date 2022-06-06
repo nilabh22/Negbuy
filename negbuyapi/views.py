@@ -861,7 +861,7 @@ def read_json(request):
     user_data_all = userDB.objects.all()
     category_data = productCategory.objects.all()
 
-    with open('new_products.json', 'r') as f:
+    with open('EG_products.json', 'r') as f:
         jsondata = f.read()
         obj = json.loads(jsondata)
         for pd in obj:
@@ -1110,6 +1110,33 @@ def size_api(request):
          'message': 'Success',
          'data' : a
      })
+
+@api_view(['GET'])
+def db_rfq(request):
+    user_id = request.headers['User-id']
+    requirement = request.data['requirement']
+    quantity = request.data['quantity']
+    target_price = request.data['target_price']
+    try:
+        user_obj= userDB.objects.get(user_id=user_id)
+        rfq.objects.all()
+        data_dict= {
+            'user': user_id,
+            'requirement': requirement,
+            'quantity' : quantity,
+            'target_price': target_price
+        }
+        return Response({
+            'status': True,
+            'message': 'Success',
+            'data' : data_dict
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'Error',
+            'message': e,
+        })
 
 # @api_view(['GET'])
 # def indiaport_api(request):

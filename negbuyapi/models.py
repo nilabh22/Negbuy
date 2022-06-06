@@ -258,9 +258,11 @@ class primary_category(models.Model):
 
 class rfq_db(models.Model):
     user = models.ForeignKey(userDB, on_delete=models.CASCADE)
-    required =models.CharField(max_length=1000, blank=True, null=True)
+    required =models.CharField(max_length=1000, blank=True, null=True)  # change the name .....requirement
     date = models.DateTimeField(auto_now=True, null=True)
-    target_price = models.IntegerField( blank=True, null=True)
+    target_price = models.IntegerField( blank=True, null=True) 
+    # add the quantity
+    # then make the get api and return  the list value of all the object 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -268,6 +270,20 @@ class rfq_db(models.Model):
 
     class Meta:
         verbose_name_plural = "RFQ_db"
+
+class rfq(models.Model):
+    user = models.ForeignKey(userDB, on_delete=models.CASCADE)
+    requirement =models.CharField(max_length=1000, blank=True, null=True)  
+    date = models.DateTimeField(auto_now=True, null=True)
+    target_price = models.IntegerField( blank=True, null=True)
+    quantity = models.CharField(max_length=1000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user.first_name) + str(self.user.last_name)
+
+    class Meta:
+        verbose_name_plural = "rfq"
 
 
 class buyer_questions(models.Model):

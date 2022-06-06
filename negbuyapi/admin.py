@@ -44,5 +44,6 @@ admin.site.register(contact_data)
 admin.site.register(primary_category)
 admin.site.register(rfq_db)
 admin.site.register(buyer_questions)
+admin.site.register(rfq)
 
 

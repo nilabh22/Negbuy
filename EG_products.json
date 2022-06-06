@@ -1,0 +1,1058 @@
+[
+    {
+        "id": 206,
+        "name": "Concrete Compound",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 783278,
+        "main_image": "main_images/concrete.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "UltraTech Cement Ltd., Ambuja Cements Ltd. , ACC Ltd., Shree Cement Ltd. ,Dalmia Bharat Ltd., Birla Corporation Limited. , India Cements Ltd.",
+        "keyword": [
+            "Concrete compound"
+        ],
+        "color": [
+            "natural"
+        ],
+        "size": [
+            "small",
+            "medium",
+            "large"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:23:54.431124Z",
+        "modified_at": "2022-06-06T05:22:09.234820Z",
+        "deleted_at": "2022-06-03T10:23:54.431214Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 207,
+        "name": "Landscaping Machine",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 6326,
+        "main_image": "main_images/Landscaping.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": true,
+        "brand": "Honda, Kawasaki, Kohler, Kubota",
+        "keyword": [
+            "Landscaping Machine"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "100",
+        "weight": "1000.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:28:50.592188Z",
+        "modified_at": "2022-06-06T05:21:44.171748Z",
+        "deleted_at": "2022-06-03T10:28:50.592238Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 208,
+        "name": "Beam Clamps",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 2232,
+        "main_image": "main_images/Beam.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Ferreterro,  UTKAL, Vaishnav",
+        "keyword": [
+            "Beam Clamps"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:34:21.706458Z",
+        "modified_at": "2022-06-06T05:21:09.778581Z",
+        "deleted_at": "2022-06-03T10:34:21.706507Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 209,
+        "name": "Tanks stand",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 347834,
+        "main_image": "main_images/Tanks_stand.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Coralife New Style BioCube Stand , Imagitarium Preferred Winston Tank Stand , Altra Flipper Wood Aquarium Stand, Aqua Culture Deluxe Aquarium Stand,Fluval Accent Aquarium Stand",
+        "keyword": [
+            "Tanks stand"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "10 gallons",
+            "20 gallons",
+            "29 gallons",
+            "30 gallons",
+            "32 gallons"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "10",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:38:36.406920Z",
+        "modified_at": "2022-06-06T05:20:53.059124Z",
+        "deleted_at": "2022-06-03T10:38:36.407002Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 210,
+        "name": "Transistor",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 9349834,
+        "main_image": "main_images/transistor.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "CDIL, DC Components, Diodes Inc, Diotec, On Semiconductor. ST, TruSemi, Zetex",
+        "keyword": [
+            "Transistor"
+        ],
+        "color": [
+            "silver and black"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "70.0",
+        "transportation_port": "Delhi port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:42:53.877330Z",
+        "modified_at": "2022-06-06T05:20:31.240435Z",
+        "deleted_at": "2022-06-03T10:42:53.877379Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 211,
+        "name": "Gear pump",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 83282,
+        "main_image": "main_images/gear_pumps.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Universal Seal Series, Universal Mag Drive Pumps, Motor Speed/ ViGEN, Spur Gear, DFO Skid",
+        "keyword": [
+            "Gear pump"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "40.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:44:42.955691Z",
+        "modified_at": "2022-06-06T05:20:09.334956Z",
+        "deleted_at": "2022-06-03T10:44:42.955735Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 212,
+        "name": "Ball valves",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 343488,
+        "main_image": "main_images/Ball_valves.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "VIP Valves, Amco Valves, Hyper Valves, L & T Valves, Hawa Valves, Steelstrong Valves, Kirloskar Valves, Racer Valve",
+        "keyword": [
+            "Ball valves"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "20.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:49:53.661350Z",
+        "modified_at": "2022-06-06T05:19:48.771159Z",
+        "deleted_at": "2022-06-03T10:49:53.661401Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 213,
+        "name": "Power inverters",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 8478347,
+        "main_image": "main_images/power_inverter.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "uminous inverter, microtek inverter, sine wave inverter, ups inverter, exide inverter, home inverter, mini inverter, amaron inverter",
+        "keyword": [
+            "Power inverters"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T10:55:45.108742Z",
+        "modified_at": "2022-06-06T05:19:27.935154Z",
+        "deleted_at": "2022-06-03T10:55:45.108803Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 214,
+        "name": "Sprockets",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 76555,
+        "main_image": "main_images/Sprockets.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Street X-Ring Sprocket, Renthal Twinring Rear Sprockets, Supersprox Sprockets, Sunstar Moto Steel Rear Sprocket",
+        "keyword": [
+            "Sprockets"
+        ],
+        "color": [
+            "assorted"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "10",
+        "weight": "20.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T11:00:36.595989Z",
+        "modified_at": "2022-06-06T05:19:07.609304Z",
+        "deleted_at": "2022-06-03T11:00:36.596045Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 215,
+        "name": "Conveyors",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 87327634,
+        "main_image": "main_images/Conveyors.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Daifuku America Corp, Regal Beloit Corporation, FLSmidth, Intelligrated, Inc.",
+        "keyword": [
+            "Conveyors"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T11:54:42.161170Z",
+        "modified_at": "2022-06-06T05:18:29.480854Z",
+        "deleted_at": "2022-06-03T11:54:42.161228Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 216,
+        "name": "Resins",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 8765645,
+        "main_image": "main_images/resins.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Skogfe epoxy resin coating kit,Bloombee clear epoxy resin,Colour Master mica powder epoxy resin dye,The Epoxy Resin Store premium quality clear epoxy resin, Amazing Clear Cast alumilite clear coating and casting resin,Dr Crafty full clear epoxy resin kit.",
+        "keyword": [
+            "Resins"
+        ],
+        "color": [
+            "natural"
+        ],
+        "size": [
+            "small",
+            "medium",
+            "large"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T11:59:09.325331Z",
+        "modified_at": "2022-06-06T05:18:06.102613Z",
+        "deleted_at": "2022-06-03T11:59:09.325371Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 217,
+        "name": "Incubator",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 21721,
+        "main_image": "main_images/incubator.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "VIP Valves, Amco Valves, Hyper Valves, L & T Valves, Hawa Valves, Steelstrong Valves, Kirloskar Valves, Racer Valve",
+        "keyword": [
+            "Incubator"
+        ],
+        "color": [
+            "assorted"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "100",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T12:05:09.106754Z",
+        "modified_at": "2022-06-06T05:17:42.572148Z",
+        "deleted_at": "2022-06-03T12:05:09.106798Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 218,
+        "name": "Machine screw jack",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 546345345,
+        "main_image": "main_images/screw_jacks.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Belvedere ,Absolut Elyx,Grey Goose,Harridan,Smirnoff",
+        "keyword": [
+            "Machine screw jack"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T12:06:52.061988Z",
+        "modified_at": "2022-06-06T05:17:25.445585Z",
+        "deleted_at": "2022-06-03T12:06:52.062043Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 219,
+        "name": "Cranes",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 34734,
+        "main_image": "main_images/cranes.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Belvedere ,Absolut Elyx,Grey Goose,Harridan,Smirnoff",
+        "keyword": [
+            "Cranes"
+        ],
+        "color": [
+            "assorted"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "20.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T12:29:29.850278Z",
+        "modified_at": "2022-06-06T05:17:05.682388Z",
+        "deleted_at": "2022-06-03T12:29:29.850343Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 220,
+        "name": "Structural shapes",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 764766,
+        "main_image": "main_images/structural_shapes.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Cartier,Celine,David Yurman Cable Cuff",
+        "keyword": [
+            "Structural shapes"
+        ],
+        "color": [
+            "natural"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "10",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-03T12:32:46.770244Z",
+        "modified_at": "2022-06-06T05:16:47.202216Z",
+        "deleted_at": "2022-06-03T12:32:46.770293Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 221,
+        "name": "Coaxial cable",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 723724,
+        "main_image": "",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Cartier,Celine,David Yurman Cable Cuff",
+        "keyword": [
+            "Coaxial cable"
+        ],
+        "color": [
+            "natural"
+        ],
+        "size": [
+            "big",
+            "small",
+            "medium"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "12",
+        "weight": "50.0",
+        "transportation_port": "Delhi port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-05T13:40:21.223387Z",
+        "modified_at": "2022-06-06T05:16:14.564792Z",
+        "deleted_at": "2022-06-05T13:40:21.223433Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 222,
+        "name": "Roadway spikes",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 575602,
+        "main_image": "main_images/spikes.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Cartier,Celine,David Yurman Cable Cuff",
+        "keyword": [
+            "Roadway spikes"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "average-size"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "10",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-06T04:52:22.482325Z",
+        "modified_at": "2022-06-06T05:12:54.025929Z",
+        "deleted_at": "2022-06-06T04:52:22.482467Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 223,
+        "name": "Cabinet",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 62167,
+        "main_image": "main_images/cabinet.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Godrej, Airwick, Mangalam CamPure, Solimo, Odonil, Ambi Pur, Rubaru, Vanesa",
+        "keyword": [
+            "Cabinet"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "small",
+            "medium",
+            "large"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "10",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-06T04:56:53.958339Z",
+        "modified_at": "2022-06-06T05:12:25.507264Z",
+        "deleted_at": "2022-06-06T04:56:53.958396Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 224,
+        "name": "Ceiling tiles and panels",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 768346,
+        "main_image": "main_images/ceiling.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Godrej, Airwick, Mangalam CamPure, Solimo, Odonil, Ambi Pur, Rubaru, Vanesa",
+        "keyword": [
+            "Ceiling tiles and panels"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "small",
+            "medium",
+            "large"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "20",
+        "weight": "50.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-06T05:01:48.266046Z",
+        "modified_at": "2022-06-06T05:11:49.432745Z",
+        "deleted_at": "2022-06-06T05:01:48.266105Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    },
+    {
+        "id": 225,
+        "name": "Basement Door",
+        "sku": "sku-info",
+        "category": "Engineering goods",
+        "inventory": 78633,
+        "main_image": "main_images/basement_door.jpeg",
+        "image": [],
+        "featured_products": true,
+        "best_selling_products": false,
+        "hot_selling_products": false,
+        "fast_dispatch": false,
+        "ready_to_ship": false,
+        "customized_product": false,
+        "brand": "Versace,MONTBLANC,Guess,Victoria",
+        "keyword": [
+            "Basement Door"
+        ],
+        "color": [
+            "all colors"
+        ],
+        "size": [
+            "small",
+            "medium",
+            "large"
+        ],
+        "details": [
+            {
+                "title": "Batch no.",
+                "description": "11 Model no."
+            }
+        ],
+        "price_choice": "Price according to quantity",
+        "price": 0.0,
+        "mrp": 0,
+        "sale_price": null,
+        "sale_startdate": null,
+        "sale_enddate": null,
+        "manufacturing_time": null,
+        "quantity_price": "10:100:10 ,100:90:20 ,1000:80:30",
+        "maximum_order_quantity": "50",
+        "weight": "100.0",
+        "transportation_port": "Mumbai port",
+        "packing_details": "ABC,India",
+        "packing_address": "XYZ,India",
+        "status": "under verification",
+        "created_at": "2022-06-06T05:05:50.595600Z",
+        "modified_at": "2022-06-06T05:11:23.092246Z",
+        "deleted_at": "2022-06-06T05:05:50.595664Z",
+        "rating": {
+            "rate": 3.0,
+            "count": 430
+        }
+    }
+]
