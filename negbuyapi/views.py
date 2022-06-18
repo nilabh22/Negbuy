@@ -489,7 +489,7 @@ def verify_gst(request):
     gst_number = request.data['gstNo']
 
     try:
-        usr = userDB.objects.get(user_id=user_id, role='Seller')
+        usr = userDB.objects.get(user_id=user_id)
         addr = "https://irisgst.com/gstin-filing-detail/?gstinno=" + gst_number
         response = requests.get(addr)
         htmlPage = bs4.BeautifulSoup(response.text, "html.parser")
@@ -1114,22 +1114,22 @@ def size_api(request):
 @api_view(['GET'])
 def db_rfq(request):
     user_id = request.headers['User-id']
-    requirement = request.data['requirement']
-    quantity = request.data['quantity']
-    target_price = request.data['target_price']
+    all_rfq_list= list()
     try:
         user_obj= userDB.objects.get(user_id=user_id)
-        rfq.objects.all()
-        data_dict= {
-            'user': user_id,
-            'requirement': requirement,
-            'quantity' : quantity,
-            'target_price': target_price
-        }
+        all_rfq=rfq.objects.all()
+        for each_rfq in all_rfq:
+            obj= {
+                'user': each_rfq.user_id,
+                'requirement': each_rfq.requirement,
+                'quantity' : each_rfq.quantity,
+                'target_price': each_rfq.target_price
+            }
+            all_rfq_list.append(obj)
         return Response({
             'status': True,
             'message': 'Success',
-            'data' : data_dict
+            'data' : all_rfq_list
         })
 
     except Exception as e:
@@ -1138,80 +1138,3 @@ def db_rfq(request):
             'message': e,
         })
 
-# @api_view(['GET'])
-# def indiaport_api(request):
-    # country_name = str(request.data['country_name'])
-    # wb = openpyxl.load_workbook('Ports Data.xlsx')
-    # ws = wb['Ports']
-# 
-    # sheet_cells = []
-    # for row in ws.iter_rows(1, ):
-        # row_cells=[]
-        # for cell in row:
-            # row_cells.append(cell.value)
-        # sheet_cells.append(tuple(row_cells))
-# 
-    # for i in range(2308, len(sheet_cells)):
-        # data_dict= {
-            # sheet_cells[i]
-        # }
-# 
-    # return Response({
-        # 'status': 'success',
-        # 'message': 'ports',
-        # 'data': data_dict ,
-        # })
-# 
-
-# @api_view(['GET'])
-# def product_api(request):
-#     a= product.objects.all()
-#     product_serialized = ProductSerializer(a, many=True)
-
-#     return Response({
-#         'status': True,
-#         'message': 'Success',
-#         'data': product_serialized.data
-#     })
-
-# create api for web-scraping and save the data in excel
-# from bs4 import BeautifulSoup
-# import requests
-
-# @api_view(['GET'])
-# def bsoup(request):
-#     wb = load_workbook('new.xlsx')
-#     ws = wb.active
- 
-#     for row in range(1030, 1038):
-#         for col in range(1, 2):
-#             char = get_column_letter(col)
-#             print(ws[char+str(row)].value)
-#             port = ws[char+str(row)].value
-#             port= port.replace(" ", "_")
-#             source = requests.get('https://www.searates.com/port/'+port+'_ye').text
-
-
-#             soup = BeautifulSoup(source,'lxml')
-#             summary= soup.find('table', class_='table table-bordered')
-#             counter = 0
-#             latitude = ""
-#             longtitude = ""
-            
-#             for i in summary.find_all('td'):
-#                 counter+=1
-#                 if counter == 14:
-#                     latitude = i.get_text()
-#                     print(latitude)
-#                 elif counter == 16:
-#                     longtitude = i.get_text()
-#                     print(longtitude)
-
-#                 lat = ws[get_column_letter(col+1)+str(row)]
-#                 lat.value = latitude
-#                 long = ws[get_column_letter(col+2)+str(row)]
-#                 long.value = longtitude
-#                 wb.save('new.xlsx')
-#         return Response({
-#             'status': 'success'
-#             })
