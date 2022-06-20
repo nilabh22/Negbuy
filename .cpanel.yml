@@ -1,0 +1,5 @@
+---
+deployment:
+  task:
+    - export DEPLOYPATH=/home/vf2586e813kg/repositories/negbuy/
+    - /bin/cp * $DEPLOYPATH
